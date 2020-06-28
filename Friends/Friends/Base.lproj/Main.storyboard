@@ -19,6 +19,9 @@
                                 <rect key="frame" x="20" y="486" width="374" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Log In"/>
+                                <connections>
+                                    <segue destination="Pvi-7f-geR" kind="show" id="rl9-ke-4LW"/>
+                                </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oCv-sT-qU6">
                                 <rect key="frame" x="20" y="375" width="374" height="34"/>
@@ -45,6 +48,16 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="137.68115942028987" y="138.61607142857142"/>
+        </scene>
+        <!--TabBar-->
+        <scene sceneID="LrK-nP-lVp">
+            <objects>
+                <viewControllerPlaceholder storyboardName="TabBar" id="Pvi-7f-geR" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="lCC-dI-XSr"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CJj-Sx-vzy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="791" y="139"/>
         </scene>
     </scenes>
 </document>

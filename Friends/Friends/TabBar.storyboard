@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="AUH-b1-fYn">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--TabBar-->
+        <scene sceneID="WXa-xp-4WN">
+            <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="siO-ab-FVY" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <tabBarController storyboardIdentifier="TabBarVC" title="TabBar" modalPresentationStyle="fullScreen" id="AUH-b1-fYn" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Ht4-bU-JNo">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="3Qi-Gp-vwZ" kind="relationship" relationship="viewControllers" id="s9I-eh-H4x"/>
+                        <segue destination="1eU-gk-Q4T" kind="relationship" relationship="viewControllers" id="uoI-4M-vyK"/>
+                        <segue destination="ZTc-fs-zsv" kind="relationship" relationship="viewControllers" id="FS9-DE-ayS"/>
+                    </connections>
+                </tabBarController>
+            </objects>
+            <point key="canvasLocation" x="-207" y="65"/>
+        </scene>
+        <!--FriendsVC-->
+        <scene sceneID="xBU-ah-RzV">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Friends" referencedIdentifier="FriendsVC" id="3Qi-Gp-vwZ" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Friends" image="person.3.fill" catalog="system" selectedImage="person.3.fill" id="5uP-up-0L9"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gJ5-Zr-zXu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="402" y="-93"/>
+        </scene>
+        <!--HomeVC-->
+        <scene sceneID="wiW-ey-JYN">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Home" referencedIdentifier="HomeVC" id="1eU-gk-Q4T" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Home" image="house.fill" catalog="system" selectedImage="house.fill" id="Jss-aP-12J"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Au8-L0-9s0" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="402" y="65"/>
+        </scene>
+        <!--SettingsVC-->
+        <scene sceneID="RKD-Z8-Smi">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Settings" referencedIdentifier="SettingsVC" id="ZTc-fs-zsv" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Settings" image="gear" catalog="system" selectedImage="gear" id="Zu7-dU-y6c"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JWg-nW-MNg" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="402" y="210"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="gear" catalog="system" width="128" height="119"/>
+        <image name="house.fill" catalog="system" width="128" height="106"/>
+        <image name="person.3.fill" catalog="system" width="128" height="61"/>
+    </resources>
+</document>
