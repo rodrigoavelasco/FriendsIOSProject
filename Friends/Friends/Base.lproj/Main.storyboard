@@ -20,7 +20,7 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Log In"/>
                                 <connections>
-                                    <segue destination="Pvi-7f-geR" kind="show" id="rl9-ke-4LW"/>
+                                    <action selector="logInButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Fyd-iP-I09"/>
                                 </connections>
                             </button>
                             <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oCv-sT-qU6">
@@ -43,6 +43,7 @@
                         <outlet property="logInButton" destination="u1n-xe-KR0" id="jYU-fH-49l"/>
                         <outlet property="passwordTextField" destination="oCv-sT-qU6" id="sGR-Lg-lxI"/>
                         <outlet property="userNameTextField" destination="kVa-2s-CUk" id="MCX-9G-zHj"/>
+                        <segue destination="Pvi-7f-geR" kind="show" identifier="homeScreenIdentifier" id="PwQ-MA-VB2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
