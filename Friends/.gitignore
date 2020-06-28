@@ -1,5 +1,5 @@
 .DS*
-Friends/Friends.xcodeproj/xcuserdata*
-Friends/Pods/Pods.xcodeproj/xcuserdata*
-Friends/Friends.xcworkspace/xcuserdata/*
-Friends/Friends.xcworkspace/xcshareddata*
+Friends.xcodeproj/xcuserdata*
+Pods/Pods.xcodeproj/xcuserdata*
+Friends.xcworkspace/xcuserdata/*
+Friends.xcworkspace/xcshareddata*
