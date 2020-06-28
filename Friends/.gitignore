@@ -3,3 +3,5 @@ Friends.xcodeproj/xcuserdata*
 Pods/Pods.xcodeproj/xcuserdata*
 Friends.xcworkspace/xcuserdata/*
 Friends.xcworkspace/xcshareddata*
+.xcscheme*
+.plist*
