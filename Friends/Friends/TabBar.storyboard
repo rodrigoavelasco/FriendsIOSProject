@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17132.0.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="8OI-GA-6Af">
+    <device id="retina6_5" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17105.0.3"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--TabBarVC-->
+        <scene sceneID="Is2-Sb-HJR">
+            <objects>
+                <tabBarController storyboardIdentifier="TabBarVC" title="TabBarVC" id="8OI-GA-6Af" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="9Fp-IG-5jy">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="fUd-oJ-PJZ" kind="relationship" relationship="viewControllers" id="5bk-Yj-kan"/>
+                        <segue destination="NcF-z6-7SZ" kind="relationship" relationship="viewControllers" id="7eI-8L-IA6"/>
+                        <segue destination="tiT-zu-aWw" kind="relationship" relationship="viewControllers" id="gNz-ZY-beX"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LMS-kI-y5z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="64" y="192"/>
+        </scene>
+        <!--FriendsVC-->
+        <scene sceneID="Y24-DD-uYb">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Friends" referencedIdentifier="FriendsVC" id="fUd-oJ-PJZ" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Friends" image="person.3.fill" catalog="system" id="3As-i2-TRl"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dFl-Xv-ZM8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="743" y="65"/>
+        </scene>
+        <!--HomeVC-->
+        <scene sceneID="8gM-Ol-rut">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Home" referencedIdentifier="HomeVC" id="NcF-z6-7SZ" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Home" image="homekit" catalog="system" id="BeL-Jw-3Jq"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4oN-Zp-KXp" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="743" y="192"/>
+        </scene>
+        <!--SettingsVC-->
+        <scene sceneID="XCv-TF-oBE">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Settings" referencedIdentifier="SettingsVC" id="tiT-zu-aWw" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="vRh-f9-H7Y"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dGU-24-FgG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="742" y="308"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="homekit" catalog="system" width="128" height="106"/>
+        <image name="person.3.fill" catalog="system" width="128" height="61"/>
+    </resources>
+</document>

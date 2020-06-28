@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		493CEE1A24A834FE00350769 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 493CEE1924A834FE00350769 /* Home.storyboard */; };
+		493CEE1C24A8376D00350769 /* TabBar.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 493CEE1B24A8376D00350769 /* TabBar.storyboard */; };
+		493CEE1E24A837AA00350769 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 493CEE1D24A837AA00350769 /* Settings.storyboard */; };
+		493CEE2024A837BC00350769 /* Friends.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 493CEE1F24A837BC00350769 /* Friends.storyboard */; };
+		493CEE2224A83BB700350769 /* TabBarTemp.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 493CEE2124A83BB700350769 /* TabBarTemp.storyboard */; };
 		87A2834824A81E0F005D5725 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A2834724A81E0F005D5725 /* AppDelegate.swift */; };
 		87A2834A24A81E0F005D5725 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A2834924A81E0F005D5725 /* SceneDelegate.swift */; };
 		87A2834C24A81E0F005D5725 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A2834B24A81E0F005D5725 /* ViewController.swift */; };
@@ -19,8 +24,16 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+<<<<<<< Updated upstream
 		1CEFAB696A766BBDEBE89FA2 /* Pods_Friends.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Friends.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5A07561408F2B1981B8057D7 /* Pods-Friends.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friends.release.xcconfig"; path = "Target Support Files/Pods-Friends/Pods-Friends.release.xcconfig"; sourceTree = "<group>"; };
+=======
+		493CEE1924A834FE00350769 /* Home.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Home.storyboard; sourceTree = "<group>"; };
+		493CEE1B24A8376D00350769 /* TabBar.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabBar.storyboard; sourceTree = "<group>"; };
+		493CEE1D24A837AA00350769 /* Settings.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
+		493CEE1F24A837BC00350769 /* Friends.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Friends.storyboard; sourceTree = "<group>"; };
+		493CEE2124A83BB700350769 /* TabBarTemp.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = TabBarTemp.storyboard; sourceTree = "<group>"; };
+>>>>>>> Stashed changes
 		87A2834424A81E0F005D5725 /* Friends.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Friends.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87A2834724A81E0F005D5725 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		87A2834924A81E0F005D5725 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -93,7 +106,15 @@
 				87A2835524A81E12005D5725 /* LaunchScreen.storyboard */,
 				87A2835824A81E12005D5725 /* Info.plist */,
 				87A2835024A81E0F005D5725 /* Friends.xcdatamodeld */,
+<<<<<<< Updated upstream
 				87A2835E24A8374E005D5725 /* GoogleService-Info.plist */,
+=======
+				493CEE1924A834FE00350769 /* Home.storyboard */,
+				493CEE1B24A8376D00350769 /* TabBar.storyboard */,
+				493CEE1D24A837AA00350769 /* Settings.storyboard */,
+				493CEE1F24A837BC00350769 /* Friends.storyboard */,
+				493CEE2124A83BB700350769 /* TabBarTemp.storyboard */,
+>>>>>>> Stashed changes
 			);
 			path = Friends;
 			sourceTree = "<group>";
@@ -158,10 +179,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				493CEE1C24A8376D00350769 /* TabBar.storyboard in Resources */,
+				493CEE2024A837BC00350769 /* Friends.storyboard in Resources */,
 				87A2835724A81E12005D5725 /* LaunchScreen.storyboard in Resources */,
 				87A2835F24A8374E005D5725 /* GoogleService-Info.plist in Resources */,
 				87A2835424A81E12005D5725 /* Assets.xcassets in Resources */,
+				493CEE1E24A837AA00350769 /* Settings.storyboard in Resources */,
 				87A2834F24A81E0F005D5725 /* Main.storyboard in Resources */,
+				493CEE2224A83BB700350769 /* TabBarTemp.storyboard in Resources */,
+				493CEE1A24A834FE00350769 /* Home.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
