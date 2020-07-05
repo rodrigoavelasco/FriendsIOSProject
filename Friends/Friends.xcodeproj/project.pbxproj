@@ -13,6 +13,10 @@
 		49369F4D24AEBB1F00396ABD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49369F4C24AEBB1E00396ABD /* Assets.xcassets */; };
 		493FD47B24ABE909007DF669 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FD47A24ABE909007DF669 /* HomeViewController.swift */; };
 		493FD47D24ABEA67007DF669 /* HomeUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FD47C24ABEA67007DF669 /* HomeUserTableViewCell.swift */; };
+		4943AEC024B1407C00B566F6 /* UserProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4943AEBF24B1407C00B566F6 /* UserProfileTableViewCell.swift */; };
+		4943AEC224B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4943AEC124B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift */; };
+		4943AEC424B1419C00B566F6 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4943AEC324B1419C00B566F6 /* FriendTableViewCell.swift */; };
+		4947CB7D24B24505005ACAB1 /* PostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4947CB7C24B24505005ACAB1 /* PostTableViewCell.swift */; };
 		87A2834824A81E0F005D5725 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A2834724A81E0F005D5725 /* AppDelegate.swift */; };
 		87A2834A24A81E0F005D5725 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A2834924A81E0F005D5725 /* SceneDelegate.swift */; };
 		87A2834C24A81E0F005D5725 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A2834B24A81E0F005D5725 /* ViewController.swift */; };
@@ -31,6 +35,10 @@
 		49369F4C24AEBB1E00396ABD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		493FD47A24ABE909007DF669 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		493FD47C24ABEA67007DF669 /* HomeUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUserTableViewCell.swift; sourceTree = "<group>"; };
+		4943AEBF24B1407C00B566F6 /* UserProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileTableViewCell.swift; sourceTree = "<group>"; };
+		4943AEC124B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileFriendsListTableViewCell.swift; sourceTree = "<group>"; };
+		4943AEC324B1419C00B566F6 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
+		4947CB7C24B24505005ACAB1 /* PostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableViewCell.swift; sourceTree = "<group>"; };
 		5A07561408F2B1981B8057D7 /* Pods-Friends.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friends.release.xcconfig"; path = "Target Support Files/Pods-Friends/Pods-Friends.release.xcconfig"; sourceTree = "<group>"; };
 		87A2834424A81E0F005D5725 /* Friends.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Friends.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87A2834724A81E0F005D5725 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -98,6 +106,9 @@
 				87A2834924A81E0F005D5725 /* SceneDelegate.swift */,
 				87A2834B24A81E0F005D5725 /* ViewController.swift */,
 				87A2834D24A81E0F005D5725 /* Main.storyboard */,
+				4943AEC124B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift */,
+				4943AEC324B1419C00B566F6 /* FriendTableViewCell.swift */,
+				4943AEBF24B1407C00B566F6 /* UserProfileTableViewCell.swift */,
 				87A2835524A81E12005D5725 /* LaunchScreen.storyboard */,
 				87A2835824A81E12005D5725 /* Info.plist */,
 				49369F4C24AEBB1E00396ABD /* Assets.xcassets */,
@@ -108,6 +119,7 @@
 				4935AFE524AC1ACD007C4DCC /* TabBarViewController.swift */,
 				4935AFE724AC3EE4007C4DCC /* SettingsViewController.swift */,
 				49369F4A24AEAA2000396ABD /* ProfilePageViewController.swift */,
+				4947CB7C24B24505005ACAB1 /* PostTableViewCell.swift */,
 			);
 			path = Friends;
 			sourceTree = "<group>";
@@ -230,9 +242,13 @@
 			files = (
 				493FD47B24ABE909007DF669 /* HomeViewController.swift in Sources */,
 				87A2834C24A81E0F005D5725 /* ViewController.swift in Sources */,
+				4947CB7D24B24505005ACAB1 /* PostTableViewCell.swift in Sources */,
 				87A2834824A81E0F005D5725 /* AppDelegate.swift in Sources */,
+				4943AEC424B1419C00B566F6 /* FriendTableViewCell.swift in Sources */,
 				87A2834A24A81E0F005D5725 /* SceneDelegate.swift in Sources */,
+				4943AEC024B1407C00B566F6 /* UserProfileTableViewCell.swift in Sources */,
 				49369F4B24AEAA2000396ABD /* ProfilePageViewController.swift in Sources */,
+				4943AEC224B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift in Sources */,
 				4935AFE624AC1ACD007C4DCC /* TabBarViewController.swift in Sources */,
 				87A2835224A81E0F005D5725 /* Friends.xcdatamodeld in Sources */,
 				493FD47D24ABEA67007DF669 /* HomeUserTableViewCell.swift in Sources */,
