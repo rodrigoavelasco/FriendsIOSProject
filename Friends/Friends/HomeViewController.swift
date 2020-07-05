@@ -37,7 +37,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         } else if indexPath.row == 1 {
             return 50
         } else {
-            return 200
+            return 135
         }
     }
     
