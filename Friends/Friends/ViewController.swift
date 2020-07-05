@@ -23,9 +23,10 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        overrideUserInterfaceStyle = .dark
         initializeTextFields()
         customizeButton(button: logInButton)
-        customizeButton(button: signUpButton)
+        customizeButton(button: signUpButton) 
         customizeButton(button: createAccountButton)
         customizeButton(button: currentUserButton)
         self.confirmPasswordTextField.center.x += self.view.bounds.width
@@ -36,9 +37,26 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func logInButtonPressed(_ sender: Any) {
-        performSegue(withIdentifier: "homeScreenIdentifier", sender: nil)
-        initializeTextFields()
+        
+        if validLoginCredentials() {
+            Auth.auth().signIn(withEmail: emailTextField.text!, password: passwordTextField.text!) {
+              user, error in
+              if error != nil && user == nil {
+                print("error loggin in \(String(describing: error))")
+              } else{
+                    self.performSegue(withIdentifier: "homeScreenIdentifier", sender: nil)
+                    self.initializeTextFields()
+                    print("signed In successfully ")
+                }
+            }
+        }
+
     }
+    
+    func validLoginCredentials() -> Bool {
+        return passwordTextField.text != "" && emailTextField.text != "" && passwordTextField.text != "password" && emailTextField.text != "email"
+    }
+    
     @IBAction func signUpButtonPressed(_ sender: Any) {
         prepareForSignUp()
         initializeSignUpTextFields()
@@ -54,6 +72,8 @@ class ViewController: UIViewController, UITextFieldDelegate {
                         Auth.auth().signIn(withEmail: self.emailTextField.text!,
                                            password: self.passwordTextField.text!)
                         self.performSegue(withIdentifier: "homeScreenIdentifier", sender: nil)
+                    }else {
+                        print(error ?? "no error")
                     }
             }
         }else if emailTextField.text! == "" || emailTextField.text == "email" {
