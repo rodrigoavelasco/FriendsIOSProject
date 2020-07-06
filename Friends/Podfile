@@ -6,6 +6,8 @@ target 'Friends' do
   use_frameworks!
   pod 'Firebase/Analytics'
   pod 'Firebase/Auth'
+  pod 'Firebase/Firestore'
+  pod 'FirebaseFirestoreSwift'
   # Pods for Friends
 
 end

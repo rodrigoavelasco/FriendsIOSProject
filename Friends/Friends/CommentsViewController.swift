@@ -73,4 +73,14 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     */
 
+    
+    // code to enable tapping on the background to remove software keyboard
+    private func textFieldShouldReturn(textField:UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
+    }
 }

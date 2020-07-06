@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import Firebase
+import CoreData
 
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -57,6 +59,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
 
     @IBOutlet weak var tableView: UITableView!
+    
+    var userEmail: String!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -64,6 +69,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
+        let user = Auth.auth().currentUser!
+        let email = user.email
+        userEmail = email
     }
     
     

@@ -20,6 +20,9 @@
 		49DE369824B2574100630AFE /* CommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DE369724B2574100630AFE /* CommentTableViewCell.swift */; };
 		49DE369A24B25F9D00630AFE /* CommentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DE369924B25F9D00630AFE /* CommentsViewController.swift */; };
 		49DE369C24B2609A00630AFE /* NewCommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DE369B24B2609A00630AFE /* NewCommentTableViewCell.swift */; };
+		49DE369E24B2A08600630AFE /* NewPostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DE369D24B2A08600630AFE /* NewPostViewController.swift */; };
+		49DE36A024B2A34700630AFE /* CommentsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DE369F24B2A34700630AFE /* CommentsTableViewController.swift */; };
+		49DE36A224B2A51800630AFE /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49DE36A124B2A51800630AFE /* User.swift */; };
 		87A2834824A81E0F005D5725 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A2834724A81E0F005D5725 /* AppDelegate.swift */; };
 		87A2834A24A81E0F005D5725 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A2834924A81E0F005D5725 /* SceneDelegate.swift */; };
 		87A2834C24A81E0F005D5725 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87A2834B24A81E0F005D5725 /* ViewController.swift */; };
@@ -45,6 +48,9 @@
 		49DE369724B2574100630AFE /* CommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentTableViewCell.swift; sourceTree = "<group>"; };
 		49DE369924B25F9D00630AFE /* CommentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsViewController.swift; sourceTree = "<group>"; };
 		49DE369B24B2609A00630AFE /* NewCommentTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewCommentTableViewCell.swift; sourceTree = "<group>"; };
+		49DE369D24B2A08600630AFE /* NewPostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostViewController.swift; sourceTree = "<group>"; };
+		49DE369F24B2A34700630AFE /* CommentsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentsTableViewController.swift; sourceTree = "<group>"; };
+		49DE36A124B2A51800630AFE /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		5A07561408F2B1981B8057D7 /* Pods-Friends.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friends.release.xcconfig"; path = "Target Support Files/Pods-Friends/Pods-Friends.release.xcconfig"; sourceTree = "<group>"; };
 		87A2834424A81E0F005D5725 /* Friends.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Friends.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87A2834724A81E0F005D5725 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -112,6 +118,7 @@
 				87A2834924A81E0F005D5725 /* SceneDelegate.swift */,
 				87A2834B24A81E0F005D5725 /* ViewController.swift */,
 				87A2834D24A81E0F005D5725 /* Main.storyboard */,
+				49DE369D24B2A08600630AFE /* NewPostViewController.swift */,
 				49DE369924B25F9D00630AFE /* CommentsViewController.swift */,
 				49DE369724B2574100630AFE /* CommentTableViewCell.swift */,
 				4943AEC124B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift */,
@@ -129,6 +136,8 @@
 				49369F4A24AEAA2000396ABD /* ProfilePageViewController.swift */,
 				4947CB7C24B24505005ACAB1 /* PostTableViewCell.swift */,
 				49DE369B24B2609A00630AFE /* NewCommentTableViewCell.swift */,
+				49DE369F24B2A34700630AFE /* CommentsTableViewController.swift */,
+				49DE36A124B2A51800630AFE /* User.swift */,
 			);
 			path = Friends;
 			sourceTree = "<group>";
@@ -265,6 +274,9 @@
 				49DE369824B2574100630AFE /* CommentTableViewCell.swift in Sources */,
 				493FD47D24ABEA67007DF669 /* HomeUserTableViewCell.swift in Sources */,
 				4935AFE824AC3EE4007C4DCC /* SettingsViewController.swift in Sources */,
+				49DE369E24B2A08600630AFE /* NewPostViewController.swift in Sources */,
+				49DE36A024B2A34700630AFE /* CommentsTableViewController.swift in Sources */,
+				49DE36A224B2A51800630AFE /* User.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

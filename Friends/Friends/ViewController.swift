@@ -8,6 +8,8 @@
 
 import UIKit
 import FirebaseAuth
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 class ViewController: UIViewController, UITextFieldDelegate {
 
@@ -20,6 +22,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var fullNameTextField: UITextField!
     @IBOutlet weak var createAccountButton: UIButton!
     @IBOutlet weak var currentUserButton: UIButton!
+    
+    let db = Firestore.firestore()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -60,6 +65,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBAction func signUpButtonPressed(_ sender: Any) {
         prepareForSignUp()
         initializeSignUpTextFields()
+        
     }
     
     @IBAction func createAccountButtonPressed(_ sender: Any) {
@@ -75,6 +81,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     }else {
                         print(error ?? "no error")
                     }
+            }
+            db.collection("users").document(emailTextField.text!).setData([
+                "email": emailTextField.text!,
+                "username": usernameTextField.text!,
+                "name": fullNameTextField.text!
+            ], merge: true) { err in
+                if let err = err {
+                    print("Error adding doucment: \(err)")
+                } else {
+                    print("Document added")
+                }
             }
         }else if emailTextField.text! == "" || emailTextField.text == "email" {
             // do alert
