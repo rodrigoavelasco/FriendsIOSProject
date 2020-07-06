@@ -363,11 +363,17 @@
                                 <rect key="frame" x="0.0" y="657" width="138" height="138"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button" image="gallery-icon"/>
+                                <connections>
+                                    <action selector="imageButtonPressed:" destination="PLX-bJ-UgJ" eventType="touchUpInside" id="Vi4-2i-rFW"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTE-Py-nw6">
                                 <rect key="frame" x="138" y="657" width="138" height="138"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="Button" image="camera"/>
+                                <connections>
+                                    <action selector="cameraButtonPressed:" destination="PLX-bJ-UgJ" eventType="touchUpInside" id="14k-OB-IDQ"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xP0-sL-ESb">
                                 <rect key="frame" x="276" y="657" width="138" height="138"/>
@@ -381,6 +387,9 @@
                     <navigationItem key="navigationItem" title="New Post" id="5zR-2x-lsI">
                         <barButtonItem key="rightBarButtonItem" title="Post" id="Wde-4g-vRm"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="myTextView" destination="fcj-Ib-xOZ" id="1BU-uX-UqB"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gYA-Ri-XXf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
