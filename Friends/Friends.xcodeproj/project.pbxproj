@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		35C239D224B29C1400391468 /* FriendsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C239D124B29C1300391468 /* FriendsListViewController.swift */; };
+		35C239D424B2A2F600391468 /* AddFriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C239D324B2A2F600391468 /* AddFriendsViewController.swift */; };
+		35C239D824B2B6D700391468 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35C239D624B2B6D700391468 /* UserTableViewCell.swift */; };
+		35C239D924B2B6D700391468 /* UserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 35C239D724B2B6D700391468 /* UserTableViewCell.xib */; };
 		4935AFE624AC1ACD007C4DCC /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4935AFE524AC1ACD007C4DCC /* TabBarViewController.swift */; };
 		4935AFE824AC3EE4007C4DCC /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4935AFE724AC3EE4007C4DCC /* SettingsViewController.swift */; };
 		49369F4B24AEAA2000396ABD /* ProfilePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49369F4A24AEAA2000396ABD /* ProfilePageViewController.swift */; };
@@ -32,6 +36,10 @@
 
 /* Begin PBXFileReference section */
 		1CEFAB696A766BBDEBE89FA2 /* Pods_Friends.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Friends.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		35C239D124B29C1300391468 /* FriendsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsListViewController.swift; sourceTree = "<group>"; };
+		35C239D324B2A2F600391468 /* AddFriendsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddFriendsViewController.swift; sourceTree = "<group>"; };
+		35C239D624B2B6D700391468 /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
+		35C239D724B2B6D700391468 /* UserTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserTableViewCell.xib; sourceTree = "<group>"; };
 		4935AFE524AC1ACD007C4DCC /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		4935AFE724AC3EE4007C4DCC /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		49369F4A24AEAA2000396ABD /* ProfilePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePageViewController.swift; sourceTree = "<group>"; };
@@ -70,6 +78,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		35C239D524B2B64600391468 /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				35C239D624B2B6D700391468 /* UserTableViewCell.swift */,
+				35C239D724B2B6D700391468 /* UserTableViewCell.xib */,
+			);
+			path = TableViewCell;
+			sourceTree = "<group>";
+		};
 		40E112E57C9A3B998231B05F /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -108,6 +125,7 @@
 		87A2834624A81E0F005D5725 /* Friends */ = {
 			isa = PBXGroup;
 			children = (
+				35C239D524B2B64600391468 /* TableViewCell */,
 				87A2834724A81E0F005D5725 /* AppDelegate.swift */,
 				87A2834924A81E0F005D5725 /* SceneDelegate.swift */,
 				87A2834B24A81E0F005D5725 /* ViewController.swift */,
@@ -129,6 +147,8 @@
 				49369F4A24AEAA2000396ABD /* ProfilePageViewController.swift */,
 				4947CB7C24B24505005ACAB1 /* PostTableViewCell.swift */,
 				49DE369B24B2609A00630AFE /* NewCommentTableViewCell.swift */,
+				35C239D124B29C1300391468 /* FriendsListViewController.swift */,
+				35C239D324B2A2F600391468 /* AddFriendsViewController.swift */,
 			);
 			path = Friends;
 			sourceTree = "<group>";
@@ -197,6 +217,7 @@
 				87A2835F24A8374E005D5725 /* GoogleService-Info.plist in Resources */,
 				49369F4D24AEBB1F00396ABD /* Assets.xcassets in Resources */,
 				87A2834F24A81E0F005D5725 /* Main.storyboard in Resources */,
+				35C239D924B2B6D700391468 /* UserTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -254,11 +275,14 @@
 				4947CB7D24B24505005ACAB1 /* PostTableViewCell.swift in Sources */,
 				87A2834824A81E0F005D5725 /* AppDelegate.swift in Sources */,
 				4943AEC424B1419C00B566F6 /* FriendTableViewCell.swift in Sources */,
+				35C239D224B29C1400391468 /* FriendsListViewController.swift in Sources */,
+				35C239D424B2A2F600391468 /* AddFriendsViewController.swift in Sources */,
 				87A2834A24A81E0F005D5725 /* SceneDelegate.swift in Sources */,
 				4943AEC024B1407C00B566F6 /* UserProfileTableViewCell.swift in Sources */,
 				49369F4B24AEAA2000396ABD /* ProfilePageViewController.swift in Sources */,
 				49DE369C24B2609A00630AFE /* NewCommentTableViewCell.swift in Sources */,
 				49DE369A24B25F9D00630AFE /* CommentsViewController.swift in Sources */,
+				35C239D824B2B6D700391468 /* UserTableViewCell.swift in Sources */,
 				4943AEC224B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift in Sources */,
 				4935AFE624AC1ACD007C4DCC /* TabBarViewController.swift in Sources */,
 				87A2835224A81E0F005D5725 /* Friends.xcdatamodeld in Sources */,
