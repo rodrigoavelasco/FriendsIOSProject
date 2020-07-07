@@ -28,7 +28,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        overrideUserInterfaceStyle = .dark
+//        overrideUserInterfaceStyle = .dark ill fix this when dark mode is implemented properly
         initializeTextFields()
         customizeButton(button: logInButton)
         customizeButton(button: signUpButton) 
