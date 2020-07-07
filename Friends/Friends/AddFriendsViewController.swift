@@ -2,24 +2,42 @@
 //  AddFriendsViewController.swift
 //  Friends
 //
-//  Created by 谢戬戬 on 7/5/20.
+//  Created by Jianjian Xie on 7/5/20.
 //  Copyright © 2020 Rodrigo Velasco. All rights reserved.
 //
 
 import UIKit
+import Firebase
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
-class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchBarDelegate {
 
-    @IBOutlet weak var input: UITextField!
     @IBOutlet weak var tableView: UITableView!
+    let searchController = UISearchController(searchResultsController: nil)
     let data = ["name", "username"]
+    var results: [String] = []
+    var hasFetched:Bool = false
+    var usersCollectionRef: CollectionReference!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.title = "Search New Friends"
+        self.navigationItemInitialized()
+        self.tableViewInitialized()
+    }
+    
+    func tableViewInitialized() {
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.isHidden = true
         tableView?.register(UINib(nibName: "UserTableViewCell", bundle: nil), forCellReuseIdentifier: "UserCell")
-        // Do any additional setup after loading the view.
+    }
+    
+    func navigationItemInitialized() {
+        navigationItem.title = "Search New Friends"
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        searchController.searchBar.delegate = self
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -29,8 +47,10 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "UserCell", for: indexPath as IndexPath)
             as! UserTableViewCell
-        cell.name.text = data[0]
-        cell.username.text = data[1]
+        if results.count != 0 {
+            cell.name.text = data[0]
+            cell.username.text = data[1]
+        }
         return cell
     }
     
@@ -43,5 +63,33 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
         // Pass the selected object to the new view controller.
     }
     */
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        results = []
+        guard let text = searchController.searchBar.text, !text.replacingOccurrences(of: " ", with: "").isEmpty else {
+            return
+        }
+        self.searchUsers(query: text)
+    }
+    
+    func searchUsers(query: String) {
+        
+        updateUI()
+    }
+    
+    func filterUsers(with term: String) {
+        guard hasFetched else {
+            return
+        }
+    }
+    
+    func updateUI() {
+        self.tableView.isHidden = results.isEmpty
+        if results.isEmpty {
+           // no result message shown
+        } else {
+            self.tableView.reloadData()
+        }
+    }
 
 }

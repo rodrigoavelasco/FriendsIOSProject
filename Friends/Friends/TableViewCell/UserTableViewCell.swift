@@ -2,7 +2,7 @@
 //  UserTableViewCell.swift
 //  Friends
 //
-//  Created by 谢戬戬 on 7/5/20.
+//  Created by Jianjian Xie on 7/5/20.
 //  Copyright © 2020 Rodrigo Velasco. All rights reserved.
 //
 
