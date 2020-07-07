@@ -79,6 +79,11 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     
     func textFieldShouldReturn(_ textField:UITextField) -> Bool {
         textField.resignFirstResponder()
+        closeTexts()
+        return true
+    }
+    
+    func closeTexts () {
         if personal {
             if editName {
                 name!.text = nameText!.text!
@@ -121,7 +126,9 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
                         action in
                         self.emailText!.becomeFirstResponder()
                     }))
-                    self.currentVC?.present(incorrectEmailAlert, animated: true, completion: nil)
+                    if self.emailText!.text! != self.email!.text!{
+                        self.currentVC?.present(incorrectEmailAlert, animated: true, completion: nil)
+                    }
                     self.emailText!.text! = Auth.auth().currentUser!.email!
                 }
                 email!.text! = emailText!.text!
@@ -166,7 +173,6 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
                 editLocation = false
             }
         }
-        return true
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -218,6 +224,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     
     
     @IBAction func namePressed(_ sender: Any) {
+        closeTexts()
         checkPersonal()
         if personal {
             editName = true
@@ -229,6 +236,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     }
     
     @IBAction func usernamePressed(_ sender: Any) {
+        closeTexts()
         checkPersonal()
         if personal {
             editUsername = true
@@ -240,6 +248,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     }
     
     @IBAction func imagePressed(_ sender: Any) {
+        closeTexts()
         checkPersonal()
         if personal {
             editImage = true
@@ -247,6 +256,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     }
     
     @IBAction func birthdayPressed(_ sender: Any) {
+        closeTexts()
         checkPersonal()
         if personal {
             editBirthday = true
@@ -276,6 +286,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     }
     
     @IBAction func emailPressed(_ sender: Any) {
+        closeTexts()
         checkPersonal()
         if personal {
             editEmail = true
@@ -287,6 +298,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     }
     
     @IBAction func phonePressed(_ sender: Any) {
+        closeTexts()
         checkPersonal()
         if personal {
             editPhone = true
@@ -312,6 +324,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     }
     
     @IBAction func locationPressed(_ sender: Any) {
+        closeTexts()
         checkPersonal()
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
