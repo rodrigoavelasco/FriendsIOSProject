@@ -49,7 +49,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
               if error != nil && user == nil {
                 print("error loggin in \(String(describing: error))")
               } else{
-                    self.performSegue(withIdentifier: "homeScreenIdentifier", sender: nil)
+                    self.performSegue(withIdentifier: "homeScreenSegueIdentifier", sender: nil)
                     self.initializeTextFields()
                     print("signed In successfully ")
                 }
@@ -77,7 +77,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     if error == nil {
                         Auth.auth().signIn(withEmail: self.emailTextField.text!,
                                            password: self.passwordTextField.text!)
-                        self.performSegue(withIdentifier: "homeScreenIdentifier", sender: nil)
+                        self.performSegue(withIdentifier: "homeScreenSegueIdentifier", sender: nil)
                     }else {
                         print(error ?? "no error")
                     }
