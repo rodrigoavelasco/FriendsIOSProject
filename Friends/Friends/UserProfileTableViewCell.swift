@@ -14,7 +14,7 @@ import FirebaseFirestoreSwift
 import CoreLocation
 
 
-class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
+class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocationManagerDelegate {
 
     
     @IBOutlet weak var name: UILabel!
@@ -121,7 +121,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
                         action in
                         self.emailText!.becomeFirstResponder()
                     }))
-                    
+                    self.currentVC?.present(incorrectEmailAlert, animated: true, completion: nil)
                     self.emailText!.text! = Auth.auth().currentUser!.email!
                 }
                 email!.text! = emailText!.text!
@@ -150,6 +150,20 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
                     }
                 }
                 editPhone = false
+            }
+            if editLocation {
+                location!.text! = locationText!.text!
+                locationText!.isHidden = true
+                location!.isHidden = false
+                db.collection("users").document(uid!).updateData(["location": location!.text!]) { err in
+                    if let err = err {
+                        print("Error updating document: \(err)")
+                    } else {
+                        print("Document successfully updated")
+                    }
+                }
+                
+                editLocation = false
             }
         }
         return true
@@ -300,41 +314,44 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
     @IBAction func locationPressed(_ sender: Any) {
         checkPersonal()
         locationManager.requestWhenInUseAuthorization()
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-            locationManager.startUpdatingLocation()
-        }
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
         if personal {
-            locationManager.requestLocation()
-            let locValue: CLLocation = locationManager.location!
-            let geoCoder = CLGeocoder()
-            geoCoder.reverseGeocodeLocation(locValue, completionHandler: { (placemarks, _) -> Void in
-                placemarks?.forEach { (placemark) in
-                    
-                    if let city = placemark.locality, let subCity = placemark.subLocality, let country = placemark.country {
-                        self.currentLocation = "\(subCity) \(city), \(country)"
-                        print(city, subCity, country)
-                    }
-                }
-            })
-            
+            let locationAlert = UIAlertController(title: "Select Location Method", message: "Do you wish to have the app determine your location for you?", preferredStyle: UIAlertController.Style.alert)
+            locationAlert.addAction(UIAlertAction(title: "Yes", style: .cancel, handler: { action in
+                self.locationManager.requestLocation()
+            }))
+            locationAlert.addAction(UIAlertAction(title: "No", style: .destructive, handler: { action in
+                self.editLocation = true
+                self.location!.isHidden = true
+                self.locationText!.text = self.location != nil && self.location!.text! != "Tap to set" ? self.location!.text! : ""
+                self.locationText!.isHidden = false
+                self.locationText!.becomeFirstResponder()
+            }))
+
+            currentVC?.present(locationAlert, animated: true, completion: nil)
         } else {
-            
+            let targetURL = URL(string: "http://maps.apple.com/?q=\"\(locationText!)")!
+            let isAvailable = UIApplication.shared.canOpenURL(targetURL)
+            if (isAvailable) {
+                UIApplication.shared.open(targetURL)
+            }
         }
     }
     
-    func locationManager(_ manager: CLLocationManager, didUpdateLocatinos locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("location manager")
         if personal {
-            let locValue: CLLocation = manager.location!
+            let locValue: CLLocation = locations.first!
             let geoCoder = CLGeocoder()
-            geoCoder.reverseGeocodeLocation(locValue, completionHandler: { (placemarks, _) -> Void in
+            geoCoder.reverseGeocodeLocation(locValue, preferredLocale: nil , completionHandler: { (placemarks, _) -> Void in
                 placemarks?.forEach { (placemark) in
-                    
-                    if let city = placemark.locality, let subCity = placemark.subLocality, let country = placemark.country {
-                        self.currentLocation = "\(subCity) \(city), \(country)"
-                        print(city, subCity, country)
+                    self.location!.text! = "\(placemark.locality!), \(placemark.administrativeArea!)"
+                    self.db.collection("users").document(self.uid!).updateData(["location": self.location!.text!]) { err in
+                        if let err = err {
+                            print("Error updating document: \(err)")
+                        } else {
+                            print("Document successfully updated")
+                        }
                     }
                 }
             })
@@ -342,15 +359,40 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
         
         
     }
+    
+    func locationManager(_ manager: CLLocationManager,
+    didFailWithError error: Error) {
+        print(error)
+    }
+    
     
 }
 
-extension UserProfileTableViewCell: CLLocationManagerDelegate {
-    
-    // called when the authorization status is changed for the core location permission
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        print("location manager authorization status changed")
-    }
-    
-    
-}
+//extension UserProfileTableViewCell: CLLocationManagerDelegate {
+//    
+//    // called when the authorization status is changed for the core location permission
+//    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+//        print("location manager authorization status changed")
+//    }
+//    
+////    func locationManager(_ manager: CLLocationManager, didUpdateLocatinos locations: [CLLocation]) {
+////        print("location manager")
+////        if personal {
+////            let locValue: CLLocation = manager.location!
+////            let geoCoder = CLGeocoder()
+////            geoCoder.reverseGeocodeLocation(locValue, completionHandler: { (placemarks, _) -> Void in
+////                placemarks?.forEach { (placemark) in
+////
+////                    if let city = placemark.locality, let subCity = placemark.subLocality, let country = placemark.country {
+////                        self.currentLocation = "\(subCity) \(city), \(country)"
+////                        print(city, subCity, country)
+////                    }
+////                }
+////            })
+////        }
+////
+////
+////    }
+//    
+//    
+//}

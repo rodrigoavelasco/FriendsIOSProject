@@ -531,7 +531,7 @@
                                         <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="sRq-Gk-MCR">
                                             <rect key="frame" x="222" y="178" width="175" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                             <textInputTraits key="textInputTraits"/>
                                         </textField>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lbg-cO-9ZW" userLabel="Name Button">
@@ -579,6 +579,7 @@
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dvF-Dw-UlM" userLabel="Location Button">
                                             <rect key="frame" x="222" y="173" width="175" height="30"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                             <connections>
                                                 <action selector="locationPressed:" destination="RCl-JE-gtV" eventType="touchUpInside" id="x67-Ss-Jrt"/>
                                             </connections>
@@ -769,9 +770,14 @@
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" title="My Profile Page" id="N9t-H6-0rd">
-                        <barButtonItem key="rightBarButtonItem" title="Item" image="plus" style="plain" id="Lth-Nq-nTR"/>
+                        <rightBarButtonItems>
+                            <barButtonItem title="Item" image="plus" style="plain" id="Lth-Nq-nTR"/>
+                            <barButtonItem image="block" id="3fZ-hG-YEm"/>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
+                        <outlet property="addButton" destination="Lth-Nq-nTR" id="pJ5-GK-c1T"/>
+                        <outlet property="blockButton" destination="3fZ-hG-YEm" id="iOH-kZ-uyL"/>
                         <outlet property="tableView" destination="zpe-fG-tTJ" id="Axk-Q1-qZQ"/>
                     </connections>
                 </viewController>
@@ -1214,6 +1220,7 @@
         <image name="Home" width="21" height="23"/>
         <image name="Home_Selected" width="21" height="23"/>
         <image name="blank-profile-picture" width="1280" height="1280"/>
+        <image name="block" width="32" height="32"/>
         <image name="camera" width="200" height="200"/>
         <image name="gallery-icon" width="512" height="512"/>
         <image name="heart-unselected" width="64" height="64"/>

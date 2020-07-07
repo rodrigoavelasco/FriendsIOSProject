@@ -13,6 +13,7 @@ class FriendTableViewCell: UITableViewCell {
     
     @IBOutlet weak var friendImage: UIImageView!
     @IBOutlet weak var friendName: UILabel!
+    var uid: String!
     
     override func awakeFromNib() {
         super.awakeFromNib()

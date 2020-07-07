@@ -69,6 +69,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             return cell
         } else if indexPath.row == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "FriendsList", for: indexPath as IndexPath) as! UserProfileFriendsListTableViewCell
+            cell.uid = uid!
             return cell
         } else if indexPath.row == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PastPostsLabel", for: indexPath as IndexPath)
@@ -102,12 +103,35 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet var tableView: UITableView!
     var uid: String!
     let db = Firestore.firestore()
+    
+    
+    @IBOutlet var blockButton: UIBarButtonItem!
+    @IBOutlet var addButton: UIBarButtonItem!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
+        if Auth.auth().currentUser!.uid != uid {
+            let userDocumentRef = db.collection("users").document(uid!)
+            userDocumentRef.getDocument{ (document, error) in
+                if let document = document, document.exists {
+                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                    print("Document data: \(dataDescription)")
+                    let map = document.data()!
+                    let username = map["name"] as! String
+                    self.navigationItem.title! = username
+                } else {
+                    print("Document does not exist")
+                }
+            }
+            self.navigationItem.setRightBarButtonItems([blockButton, addButton], animated: true)
+        } else {
+            self.navigationItem.title! = "My Profile Page"
+            self.navigationItem.setRightBarButtonItems(nil, animated: false)
+        }
     }
     
 
