@@ -122,7 +122,16 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
     }
     
     func setBirthday(changed: Bool) {
-        birthday!.isHidden = false
+        if changed {
+            db.collection("users").document(uid!).updateData(["birthday": birthday!.text!]) { err in
+                if let err = err {
+                    print("Error updating document: \(err)")
+                } else {
+                    print("Document successfully updated")
+                }
+            }
+
+        }
         editBirthday = false
     }
     
@@ -160,15 +169,14 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
         checkPersonal()
         if personal {
             editBirthday = true
-            birthday!.isHidden = true
             let dateChooserAlert = UIAlertController(title: "Choose your birthday", message: nil, preferredStyle: .actionSheet)
-            datePicker = UIDatePicker()
+            datePicker = UIDatePicker(frame: CGRect(x:35, y: 20, width: 320, height: 220))
             datePicker.datePickerMode = UIDatePicker.Mode.date
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMMM d, yyyy"
-            if (birthday != nil) {
-                datePicker.date = dateFormatter.date(from: birthday!.text!)!
+            if (birthday!.text != "Tap to set" && birthday != nil) {
+                datePicker!.date = dateFormatter.date(from: birthday!.text!)!
             }
             dateChooserAlert.view.addSubview(datePicker)
             dateChooserAlert.addAction(UIAlertAction(title: "Done", style: .default, handler: { action in
@@ -180,7 +188,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
                 
                 self.setBirthday(changed: false)
             }))
-            let height: NSLayoutConstraint = NSLayoutConstraint(item: dateChooserAlert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.1, constant: 300)
+            let height: NSLayoutConstraint = NSLayoutConstraint(item: dateChooserAlert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 350)
             dateChooserAlert.view.addConstraint(height)
             currentVC?.present(dateChooserAlert, animated: true, completion: nil)
         }

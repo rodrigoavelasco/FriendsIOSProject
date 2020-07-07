@@ -77,7 +77,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     if error == nil {
                         Auth.auth().signIn(withEmail: self.emailTextField.text!,
                                            password: self.passwordTextField.text!)
-                        self.performSegue(withIdentifier: "homeScreenIdentifier", sender: nil)
+                        self.performSegue(withIdentifier: "homeScreenSegueIdentifier", sender: nil)
                         let uid: String = Auth.auth().currentUser!.uid
                         self.db.collection("users").document(uid).setData([
                             "email": self.emailTextField.text!,
