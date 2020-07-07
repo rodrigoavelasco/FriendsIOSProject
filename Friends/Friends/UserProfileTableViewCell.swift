@@ -11,6 +11,7 @@ import Firebase
 import CoreData
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import CoreLocation
 
 
 class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
@@ -49,7 +50,11 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
     var uid: String!
     var personal: Bool = false
     
+    var currentLocation: String!
+    
     let db = Firestore.firestore()
+    
+    var locationManager = CLLocationManager()
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -61,7 +66,8 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
         emailText.delegate = self
         phoneText.delegate = self
         locationText.delegate = self
-        	
+        
+        locationManager.delegate = self
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -107,6 +113,44 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
                 
                 editImage = false
             }
+            if editEmail {
+                Auth.auth().currentUser?.updateEmail(to: emailText!.text!) {
+                    (error) in
+                    let incorrectEmailAlert = UIAlertController(title: "Email address error", message: "You must choose a different email address", preferredStyle: .alert)
+                    incorrectEmailAlert.addAction(UIAlertAction(title: "Dismiss", style: .destructive, handler: {
+                        action in
+                        self.emailText!.becomeFirstResponder()
+                    }))
+                    
+                    self.emailText!.text! = Auth.auth().currentUser!.email!
+                }
+                email!.text! = emailText!.text!
+                let userRef = db.collection("users").document(uid)
+                userRef.updateData([
+                    "email": email!.text!]) { err in
+                        if let err = err {
+                            print("Error updating document: \(err)")
+                        } else {
+                            print("Document successfully updated")
+                        }
+                }
+                emailText!.isHidden = true
+                email!.isHidden = false
+                editEmail = false
+            }
+            if editPhone {
+                phone!.text! = phoneText!.text!
+                phone!.isHidden = false
+                phoneText!.isHidden = true
+                db.collection("users").document(uid!).updateData(["phone": phone!.text!]) { err in
+                    if let err = err {
+                        print("Error updating document: \(err)")
+                    } else {
+                        print("Document successfully updated")
+                    }
+                }
+                editPhone = false
+            }
         }
         return true
     }
@@ -116,7 +160,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
     }
     
     func checkPersonal() {
-        if Auth.auth().currentUser!.uid == uid! {
+        if !personal && Auth.auth().currentUser!.uid == uid! {
             personal = true
         }
     }
@@ -133,6 +177,29 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
 
         }
         editBirthday = false
+    }
+    
+    @IBAction func cancelPhone(sender: UIBarButtonItem) {
+        phoneText!.text = phone!.text!
+        phoneText!.resignFirstResponder()
+        phoneText!.isHidden = true
+        phone!.isHidden = false
+        editPhone = false
+    }
+    
+    @IBAction func donePhone(sender: UIBarButtonItem) {
+        phone!.text! = phoneText!.text!
+        phone!.isHidden = false
+        phoneText!.isHidden = true
+        db.collection("users").document(uid!).updateData(["phone": phone!.text!]) { err in
+            if let err = err {
+                print("Error updating document: \(err)")
+            } else {
+                print("Document successfully updated")
+            }
+        }
+        phoneText!.resignFirstResponder()
+        editPhone = false
     }
     
     
@@ -175,7 +242,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
 
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMMM d, yyyy"
-            if (birthday!.text != "Tap to set" && birthday != nil) {
+            if (birthday != nil && birthday!.text != "Tap to set") {
                 datePicker!.date = dateFormatter.date(from: birthday!.text!)!
             }
             dateChooserAlert.view.addSubview(datePicker)
@@ -196,14 +263,94 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate {
     
     @IBAction func emailPressed(_ sender: Any) {
         checkPersonal()
+        if personal {
+            editEmail = true
+            email!.isHidden = true
+            emailText!.text = email != nil && email!.text! != "Tap to set" ? email!.text! : ""
+            emailText!.isHidden = false
+            emailText!.becomeFirstResponder()
+        }
     }
     
     @IBAction func phonePressed(_ sender: Any) {
         checkPersonal()
+        if personal {
+            editPhone = true
+            phone!.isHidden = true
+            phoneText!.text = phone != nil && phone!.text! != "Tap to set" ? phone!.text! : ""
+            phoneText!.isHidden = false
+            let numberToolbar: UIToolbar = UIToolbar()
+            numberToolbar.barStyle = UIBarStyle.default
+            numberToolbar.items = [
+                UIBarButtonItem(title:"Cancel", style: UIBarButtonItem.Style.plain, target: self, action: #selector(cancelPhone(sender:))),
+                UIBarButtonItem(barButtonSystemItem: UIBarButtonItem.SystemItem.flexibleSpace, target: self, action: nil),
+                UIBarButtonItem(title: "Apply", style: UIBarButtonItem.Style.done, target: self, action: #selector(donePhone(sender:)))]
+            numberToolbar.sizeToFit()
+            phoneText!.inputAccessoryView = numberToolbar
+            phoneText!.becomeFirstResponder()
+        } else {
+            if phone != nil && phone!.text! != "" && phone!.text! != "Tap to set" {
+                if let url = URL(string: "tel://\(phone!.text!)"), UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url)
+                }
+            }
+        }
     }
     
     @IBAction func locationPressed(_ sender: Any) {
         checkPersonal()
+        locationManager.requestWhenInUseAuthorization()
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+            locationManager.startUpdatingLocation()
+        }
+        if personal {
+            locationManager.requestLocation()
+            let locValue: CLLocation = locationManager.location!
+            let geoCoder = CLGeocoder()
+            geoCoder.reverseGeocodeLocation(locValue, completionHandler: { (placemarks, _) -> Void in
+                placemarks?.forEach { (placemark) in
+                    
+                    if let city = placemark.locality, let subCity = placemark.subLocality, let country = placemark.country {
+                        self.currentLocation = "\(subCity) \(city), \(country)"
+                        print(city, subCity, country)
+                    }
+                }
+            })
+            
+        } else {
+            
+        }
     }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocatinos locations: [CLLocation]) {
+        print("location manager")
+        if personal {
+            let locValue: CLLocation = manager.location!
+            let geoCoder = CLGeocoder()
+            geoCoder.reverseGeocodeLocation(locValue, completionHandler: { (placemarks, _) -> Void in
+                placemarks?.forEach { (placemark) in
+                    
+                    if let city = placemark.locality, let subCity = placemark.subLocality, let country = placemark.country {
+                        self.currentLocation = "\(subCity) \(city), \(country)"
+                        print(city, subCity, country)
+                    }
+                }
+            })
+        }
+        
+        
+    }
+    
+}
+
+extension UserProfileTableViewCell: CLLocationManagerDelegate {
+    
+    // called when the authorization status is changed for the core location permission
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        print("location manager authorization status changed")
+    }
+    
     
 }
