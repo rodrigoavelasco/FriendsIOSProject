@@ -14,11 +14,11 @@ import FirebaseFirestoreSwift
 
 class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if false {
-            return 5
-        } else {
-            return 10
+        var result = 4
+        if posts != nil {
+            result += posts.count
         }
+        return result
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -75,7 +75,8 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             let cell = tableView.dequeueReusableCell(withIdentifier: "PastPostsLabel", for: indexPath as IndexPath)
             return cell
         } else if indexPath.row >= 4 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Post", for: indexPath as IndexPath)
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Post", for: indexPath as IndexPath) as! CommentTableViewCell
+            
             return cell
         }
         
@@ -103,6 +104,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet var tableView: UITableView!
     var uid: String!
     let db = Firestore.firestore()
+    var posts: [String]!
     
     
     @IBOutlet var blockButton: UIBarButtonItem!
@@ -123,6 +125,9 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                     let map = document.data()!
                     let username = map["name"] as! String
                     self.navigationItem.title! = username
+                    if map["posts"] != nil {
+                        self.posts = map["posts"] as? [String]
+                    }
                 } else {
                     print("Document does not exist")
                 }

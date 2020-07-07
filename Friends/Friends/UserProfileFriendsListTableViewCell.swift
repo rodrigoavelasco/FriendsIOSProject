@@ -14,20 +14,25 @@ import FirebaseFirestoreSwift
 
 class UserProfileFriendsListTableViewCell: UITableViewCell, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        let userDocumentRef = db.collection("users").document(uid!)
-        userDocumentRef.getDocument{ (document, error) in
-            if let document = document, document.exists {
-                let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-                print("Document data: \(dataDescription)")
-                let map = document.data()!
-                if map["friends"] != nil {
-                    self.friends = map["friends"] as? [String]
+        if (uid != nil) {
+            let userDocumentRef = db.collection("users").document(uid!)
+            userDocumentRef.getDocument{ (document, error) in
+                if let document = document, document.exists {
+                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                    print("Document data: \(dataDescription)")
+                    let map = document.data()!
+                    if map["friends"] != nil {
+                        self.friends = map["friends"] as? [String]
+                    }
+                } else {
+                    print("Document does not exist")
                 }
-            } else {
-                print("Document does not exist")
             }
+            return friends != nil ? friends!.count : 0
+        } else {
+            return 0
         }
-        return friends != nil ? friends!.count : 0
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -54,7 +59,11 @@ class UserProfileFriendsListTableViewCell: UITableViewCell, UITableViewDelegate,
 
     @IBOutlet weak var friendsList: UITableView!
     
-    var uid: String!
+    var uid: String! {
+        didSet{
+            friendsList.reloadData()
+        }
+    }
     var friends: [String]!
     let db = Firestore.firestore()
     override func awakeFromNib() {
