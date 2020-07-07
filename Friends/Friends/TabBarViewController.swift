@@ -20,6 +20,10 @@ class TabBarViewController: UITabBarController {
 //        self.tabBarController?.tabBar.items![2].image = UIImage(named: "settings2.png")
     }
     
+    
+    func darkMode(){
+        overrideUserInterfaceStyle = .dark
+    }
 
     /*
     // MARK: - Navigation

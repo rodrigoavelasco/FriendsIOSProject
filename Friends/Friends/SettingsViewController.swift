@@ -8,7 +8,10 @@
 
 import UIKit
 
-class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate {
+    let darkModeSwitch = UISwitch(frame: CGRect(x: 1, y: 1, width: 20, height: 20))
+    var darkMode = false
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
             return 3
@@ -58,7 +61,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             if indexPath.row == 0 {
                 cell.textLabel!.text = "Change Username"
                 return cell
-            } else if indexPath.row == 0 {
+            } else if indexPath.row == 1 {
                 cell.textLabel!.text = "Change Password"
             } else {
                 cell.textLabel!.text = "This shouldn't appear!"
@@ -76,6 +79,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchSettings", for: indexPath as IndexPath)
             if indexPath.row == 0 {
                 cell.textLabel!.text = "Dark Mode"
+                darkModeSwitch.addTarget(self, action: #selector(toggleDarkMode(_:)), for: .valueChanged)
+                cell.accessoryView = darkModeSwitch
             } else {
                 cell.textLabel!.text = "This shouldn't appear!"
             }
@@ -108,10 +113,16 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 //        return UITableViewCell()
     }
     
+    @IBAction func toggleDarkMode(_ sender: UISwitch){
+        if sender.isOn {
+            darkMode = true
+        }
+    }
+    
 
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
-        super.viewDidLoad()
+        (self.parent?.parent as! TabBarViewController).delegate = self
 
         // Do any additional setup after loading the view.
         tableView.delegate = self
@@ -137,6 +148,12 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             return "Delete Account"
         } else {
             return "This shouldn't appear!"
+        }
+    }
+    
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        if darkMode{
+            (tabBarController as! TabBarViewController).darkMode()
         }
     }
 
