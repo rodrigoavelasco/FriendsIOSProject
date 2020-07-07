@@ -9,6 +9,8 @@
 import UIKit
 import Firebase
 import CoreData
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -17,11 +19,21 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
+            let userDocumentRef = db.collection("users").document(uid!)
             let cell = tableView.dequeueReusableCell(withIdentifier: "HomeUser", for: indexPath as IndexPath) as! HomeUserTableViewCell
-            cell.homeNameLabel!.text = "Hyun Kim"
-            cell.homeUserNameLabel!.text = "HJK545"
-            let defaultImage = UIImage(named: "blank-profile-picture")
-            cell.homeUserImageView!.image = defaultImage
+            userDocumentRef.getDocument{ (document, error) in
+                if let document = document, document.exists {
+                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                    print("Document data: \(dataDescription)")
+                    let map = document.data()!
+                    cell.homeNameLabel!.text = map["name"] as! String
+                    cell.homeUserNameLabel!.text = map["username"] as! String
+                } else {
+                    print("Document does not exist")
+                }
+            }
+//            let defaultImage = UIImage(named: "blank-profile-picture")
+//            cell.homeUserImageView!.image = defaultImage
             return cell
         }
         else if indexPath.row == 1 {
@@ -59,8 +71,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
 
     @IBOutlet weak var tableView: UITableView!
-    
-    var userEmail: String!
+    let db = Firestore.firestore()
+    var uid: String!
+    var user: User!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -69,9 +82,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
-        let user = Auth.auth().currentUser!
-        let email = user.email
-        userEmail = email
+        uid = Auth.auth().currentUser!.uid
+        user = User(uid: Auth.auth().currentUser!.uid)
+        
     }
     
     
@@ -86,10 +99,20 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     // MARK: - Navigation
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
+    
+    */
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
+        print(segue.identifier!)
+        if segue.identifier! == "My Profile Segue" {
+            print("My Profile Segue")
+            if let tvc = segue.destination as? ProfilePageViewController {
+                tvc.uid = uid!
+//                print(uid!)
+//                print(tvc.uid!)
+                
+            }
+        }
     }
-    */
-
 }

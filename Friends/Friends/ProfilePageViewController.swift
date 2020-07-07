@@ -7,6 +7,10 @@
 //
 
 import UIKit
+import Firebase
+import CoreData
+import FirebaseFirestore
+import FirebaseFirestoreSwift
 
 class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -20,7 +24,45 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.row == 0 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "User Info", for: indexPath as IndexPath) as! UserProfileTableViewCell
-            cell.userImage!.image = UIImage(named: "blank-profile-picture")
+            cell.uid = uid!
+            cell.currentVC = self
+            let userDocumentRef = db.collection("users").document(uid!)
+            
+            userDocumentRef.getDocument{ (document, error) in
+                if let document = document, document.exists {
+                    let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                    print("Document data: \(dataDescription)")
+                    let map = document.data()!
+                    cell.name!.text = map["name"] as? String
+                    cell.userName!.text = map["username"] as? String
+                    cell.email!.text = map["email"] as? String
+                    if map["birthday"] != nil {
+                        cell.birthday!.text = map["birthday"] as? String
+                    } else {
+                        cell.birthday!.text = "Tap to set"
+                    }
+                    if map["phone"] != nil {
+                        cell.phone!.text = map["phone"] as? String
+                    } else {
+                        cell.phone!.text = "Tap to set"
+                    }
+                    if map["location"] != nil {
+                        cell.location!.text = map["location"] as? String
+                    } else {
+                        cell.location!.text = "Tap to set"
+                    }
+                    if map["image"] != nil {
+                        cell.userImage!.image = UIImage(named: "blank-profile-picture")
+                    } else {
+                        cell.imageSetView!.isHidden = false
+                        cell.imageTapToSet!.isHidden = false
+                    }
+                } else {
+                    print("Document does not exist")
+                }
+            }
+
+
             return cell
         } else if indexPath.row == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "FriendsLabel", for: indexPath as IndexPath)
@@ -58,13 +100,14 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     
 
     @IBOutlet var tableView: UITableView!
+    var uid: String!
+    let db = Firestore.firestore()
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
-        
     }
     
 

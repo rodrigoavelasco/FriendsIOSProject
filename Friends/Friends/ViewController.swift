@@ -78,21 +78,24 @@ class ViewController: UIViewController, UITextFieldDelegate {
                         Auth.auth().signIn(withEmail: self.emailTextField.text!,
                                            password: self.passwordTextField.text!)
                         self.performSegue(withIdentifier: "homeScreenIdentifier", sender: nil)
+                        let uid: String = Auth.auth().currentUser!.uid
+                        self.db.collection("users").document(uid).setData([
+                            "email": self.emailTextField.text!,
+                            "username": self.usernameTextField.text!,
+                            "name": self.fullNameTextField.text!
+                        ], merge: true) { err in
+                            if let err = err {
+                                print("Error adding doucment: \(err)")
+                            } else {
+                                print("Document added")
+                            }
+                        }
                     }else {
                         print(error ?? "no error")
                     }
             }
-            db.collection("users").document(emailTextField.text!).setData([
-                "email": emailTextField.text!,
-                "username": usernameTextField.text!,
-                "name": fullNameTextField.text!
-            ], merge: true) { err in
-                if let err = err {
-                    print("Error adding doucment: \(err)")
-                } else {
-                    print("Document added")
-                }
-            }
+            
+            
         }else if emailTextField.text! == "" || emailTextField.text == "email" {
             // do alert
         }else if passwordTextField.text! == "" || passwordTextField.text == "password" {
@@ -191,6 +194,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.view.endEditing(true)
     }
 
+    
 }
 
 
