@@ -49,7 +49,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
               if error != nil && user == nil {
                 print("error loggin in \(String(describing: error))")
               } else{
-                    self.performSegue(withIdentifier: "homeScreenIdentifier", sender: nil)
+                    self.performSegue(withIdentifier: "homeScreenSegueIdentifier", sender: nil)
                     self.initializeTextFields()
                     print("signed In successfully ")
                 }
