@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import Firebase
 import FirebaseFirestore
+import CoreLocation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
