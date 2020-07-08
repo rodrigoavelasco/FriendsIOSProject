@@ -15,6 +15,7 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
 
     @IBOutlet weak var tableView: UITableView!
     let searchController = UISearchController(searchResultsController: nil)
+    let db = Firestore.firestore()
     let data = ["name", "username"]
     var results: [String] = []
     var hasFetched:Bool = false
@@ -82,6 +83,12 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
             return
         }
     }
+    
+//    func getAllUsers(completion: @escaping (Result<[[String: [String]]], Error>) -> Void) {
+//        db.child("users").observeSingleEvent(of:.value, with: { snapshot in
+//                guard
+//        })
+//    }
     
     func updateUI() {
         self.tableView.isHidden = results.isEmpty
