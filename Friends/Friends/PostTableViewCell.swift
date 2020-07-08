@@ -7,6 +7,13 @@
 //
 
 import UIKit
+import Firebase
+import CoreData
+import FirebaseFirestore
+import FirebaseFirestoreSwift
+import FirebaseStorage
+import AVFoundation
+import Foundation
 
 class PostTableViewCell: UITableViewCell {
 
@@ -26,8 +33,14 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var likeButton: UIButton!
     @IBOutlet weak var commentButton: UIButton!
     
+    var uid: String!
+    
+    var currentVC: ProfilePageViewController!
+    
     var like: Bool?
     
+    let db = Firestore.firestore()
+    let storage = Storage.storage()
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -48,6 +61,40 @@ class PostTableViewCell: UITableViewCell {
             likeCount!.text = "\(count)"
             likeButton.setImage(UIImage(named: "heart-unselected"), for: .normal)
             like = false
+        }
+    }
+    
+    func addPost(postID: String) {
+        let userDocumentRef = db.collection("posts").document(postID)
+        userDocumentRef.getDocument{ (document, error) in
+            if let document = document, document.exists {
+                let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                print("Document data: \(dataDescription)")
+                let map = document.data()!
+                if map["likes"] != nil {
+                    self.likeCount!.text = "\(map["likes"] as! Int)"
+                } else {
+                    self.db.collection("posts").document(postID).updateData(["likes": 0])
+                }
+                if map["comments"] != nil {
+                    self.commentCount!.text = "\((map["comments"] as! [String]).count)"
+                } else{
+                    self.db.collection("posts").document(postID).updateData(["comments": []])
+                }
+                
+                self.postText!.text = map["content"] as? String
+                self.postDate!.text = map["date"] as? String
+                
+//                self.postText!.lineBreakMode = NSLineBreakMode.byWordWrapping
+//                self.postText!.numberOfLines = 0
+//                let tempLabel: UILabel = self.postText!
+//                tempLabel.sizeToFit()
+//                self.postText!.fr
+//                CGSize = CGSize(
+                self.postText!.sizeToFit()
+            } else {
+                print("Document does not exist")
+            }
         }
     }
     

@@ -79,7 +79,18 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             let cell = tableView.dequeueReusableCell(withIdentifier: "PastPostsLabel", for: indexPath as IndexPath)
             return cell
         } else if indexPath.row >= 4 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Post", for: indexPath as IndexPath) as! CommentTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Post", for: indexPath as IndexPath) as! PostTableViewCell
+            
+            cell.uid = uid!
+            cell.userName!.text = userName!
+            if(imageString != nil) {
+                cell.userImage.load(url: URL(string:imageString!)!)
+            }
+            cell.currentVC = self
+            let postNumber = indexPath.row - 4
+            cell.addPost(postID: posts[posts.count - 1 - postNumber])
+            
+
             
             return cell
         }
@@ -97,7 +108,15 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
         } else if indexPath.row == 3 {
             return 40
         } else if indexPath.row >= 4 {
-            return 200
+            let tempIndexPath = IndexPath(row: indexPath.row, section: 0)
+            let cell = self.tableView.cellForRow(at: tempIndexPath) as? PostTableViewCell
+            var result: CGFloat = 25
+            result += (cell?.userImage!.frame.size.height) ?? 0
+            result += (cell?.postText!.frame.size.height) ?? 0
+            if result == 25 {
+                return 150
+            }
+            return result
         }
         else {
             return 200
@@ -110,6 +129,10 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     let db = Firestore.firestore()
     let storage = Storage.storage()
     var posts: [String]!
+    var friends: [String]!
+    
+    var imageString: String!
+    var userName: String!
     
     
     @IBOutlet var blockButton: UIBarButtonItem!
@@ -142,6 +165,38 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             self.navigationItem.title! = "My Profile Page"
             self.navigationItem.setRightBarButtonItems(nil, animated: false)
         }
+        
+        let userDocumentRef = db.collection("users").document(uid!)
+        
+        userDocumentRef.getDocument{ (document, error) in
+            if let document = document, document.exists {
+                let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                print("Document data: \(dataDescription)")
+                let map = document.data()!
+                if map["posts"] != nil {
+                    
+                    let allPosts = map["posts"] as! [String]
+                    if allPosts.count <= 5 {
+                        self.posts = allPosts
+                    } else {
+                        let slice: ArraySlice<String> = allPosts[allPosts.count - 6 ... allPosts.count - 1]
+                        self.posts = Array<String>() + slice
+                    }
+                    self.tableView.reloadData()
+                } else {
+                    print("empty posts")
+                }
+                if map["image"] != nil {
+                    self.imageString = map["image"] as? String
+                }
+                self.userName = map["name"] as? String
+               
+            } else {
+                print("Document does not exist")
+            }
+        }
+
+
     }
     
 
