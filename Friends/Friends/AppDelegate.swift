@@ -25,9 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         print(db) // silence warning
         
-        let storage = Storage.storage()
-
-        print(storage)
+//        let storage = Storage.storage()  error in this line undefined variable Storage
+//
+//        print(storage)
 
         return true
     }

@@ -84,6 +84,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         tableView.dataSource = self
         uid = Auth.auth().currentUser!.uid
         user = User(uid: Auth.auth().currentUser!.uid)
+        SettingsViewController().loadUserSettings()
         
     }
     

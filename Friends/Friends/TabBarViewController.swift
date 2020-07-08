@@ -7,22 +7,54 @@
 //
 
 import UIKit
+import CoreData
+import FirebaseAuth
 
 class TabBarViewController: UITabBarController {
     
     
-    
+    let userEmail:String = (Auth.auth().currentUser?.email)!
+
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        if isDarkModeOn(){
+            darkMode()
+        }
         // Do any additional setup after loading the view.
 //        self.tabBarController?.tabBar.items![1].image = UIImage(named: "Home.png")
 //        self.tabBarController?.tabBar.items![2].image = UIImage(named: "settings2.png")
     }
     
+    func isDarkModeOn() -> Bool {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        var fetchedResults: [NSManagedObject]? = nil
+        let predicate = NSPredicate(format: "email MATCHES '\(userEmail)'")
+        request.predicate = predicate
+        
+        do{
+            try fetchedResults = context.fetch(request) as? [NSManagedObject]
+        } catch{
+            // error occurs
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        return (fetchedResults![0].value(forKey: "darkmode") != nil)
+    }
     
     func darkMode(){
         overrideUserInterfaceStyle = .dark
+    }
+    
+    func screenSecurity(){
+//        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+//        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+//        blurEffectView.frame = window!.frame
+//        blurEffectView.tag = 221122
+//        self.window?.addSubview(blurEffectView)
+
     }
 
     /*

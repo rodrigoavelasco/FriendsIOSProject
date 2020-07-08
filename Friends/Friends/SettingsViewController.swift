@@ -7,10 +7,16 @@
 //
 
 import UIKit
+import CoreData
+import FirebaseAuth
 
 class SettingsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITabBarControllerDelegate {
     let darkModeSwitch = UISwitch(frame: CGRect(x: 1, y: 1, width: 20, height: 20))
+    let locationServicesSwitch = UISwitch(frame: CGRect(x: 1, y: 1, width: 20, height: 20))
+    let enableScreenSecuritySwitch = UISwitch(frame: CGRect(x: 1, y: 1, width: 20, height: 20))
     var darkMode = false
+    var screenSecurity = false
+    let userEmail:String = (Auth.auth().currentUser?.email)!
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
@@ -36,8 +42,12 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchSettings", for: indexPath as IndexPath)
                 if indexPath.row == 0 {
                     cell.textLabel!.text = "Location Services"
+                    locationServicesSwitch.addTarget(self, action: #selector(toggleLocationServices(_:)), for: .valueChanged)
+                    cell.accessoryView = locationServicesSwitch
                 } else if indexPath.row == 2 {
                     cell.textLabel!.text = "Enable Screen Security"
+                    enableScreenSecuritySwitch.addTarget(self, action: #selector(toggleScreenSecurity(_:)), for: .valueChanged)
+                    cell.accessoryView = enableScreenSecuritySwitch
                 } else {
                     cell.textLabel!.text = "This shouldn't appear!"
                 }
@@ -113,9 +123,37 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 //        return UITableViewCell()
     }
     
+    @IBAction func toggleLocationServices(_ sender: UISwitch){
+        if sender.isOn{
+            print("location Services On")
+        }
+    }
+    
+    @IBAction func toggleScreenSecurity(_ sender: UISwitch){
+        if sender.isOn{
+            print("toggleScreenSecurity")
+            screenSecurity = true
+        }
+    }
+    
     @IBAction func toggleDarkMode(_ sender: UISwitch){
         if sender.isOn {
-            darkMode = true
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate // gives a pointer to the class app delegate
+            let context = appDelegate.persistentContainer.viewContext
+            let settings = NSEntityDescription.insertNewObject(forEntityName: "Settings", into: context)
+            
+            settings.setValue(userEmail, forKey: "email")
+            settings.setValue(true, forKey: "darkmode")
+            
+            // Commit changes
+            do {
+                try context.save()
+            } catch {
+                // error occurs
+                let nserror = error as NSError
+                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
         }
     }
     
@@ -127,6 +165,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
+        loadUserSettings()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -151,7 +193,30 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         }
     }
     
+    func loadUserSettings(){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        var fetchedResults: [NSManagedObject]? = nil
+        let predicate = NSPredicate(format: "email MATCHES '\(userEmail)'")
+        request.predicate = predicate
+        
+        do{
+            try fetchedResults = context.fetch(request) as? [NSManagedObject]
+        } catch{
+            // error occurs
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        darkMode = (fetchedResults![0].value(forKey: "darkmode") != nil)
+        if darkMode {
+            darkModeSwitch.isOn = true
+        }
+    }
+    
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+
         if darkMode{
             (tabBarController as! TabBarViewController).darkMode()
         }
