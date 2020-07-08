@@ -36,6 +36,8 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     @IBAction func postButtonPressed(_ sender: Any) {
+        let storageRef = self.storage.reference()
+
         var ref: DocumentReference? = nil
         let user = Auth.auth().currentUser!
         let uid = user.uid
@@ -46,10 +48,60 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
         formatter.dateFormat = "MMMM d, yyyy"
         let result = formatter.string(from: date)
         
+
+        var finalString: String = ""
+        
+        let list = myTextView!.getParts()
+        var newList: [String] = Array<String>()
+        let nsurl: NSURL = NSURL()
+        let uiimage: UIImage = UIImage()
+        print("list lengtH: \(list.count)")
+        print(list)
+        for var index in 0 ..< list.count {
+            if type(of: list[index]) == type(of: nsurl) {
+                newList.append("#doc#\(index)#doc#")
+                finalString = finalString + newList.last!
+                ref = db.collection("files").addDocument(data: [
+                    "uid": uid,
+                    "email": email,
+                    "date": result
+                ]) { err in
+                    if let err = err {
+                        print("Error adding document: \(err)")
+                    } else {
+                        let docID = ref!.documentID
+                        
+                    }
+                }
+                index += 1
+            } else if type(of: list[index]) == type(of: uiimage) {
+                newList.append("#img#\(index)#img#")
+                finalString = finalString + newList.last!
+                ref = db.collection("images").addDocument(data: [
+                    "uid": uid,
+                    "email": email,
+                    "date": result
+                ]) { err in
+                    if let err = err {
+                        print("Error adding document: \(err)")
+                    } else {
+                        let imgID = ref!.documentID
+                        
+                    }
+                }
+            } else {
+                newList.append(list[index] as! String)
+                finalString = finalString + newList.last!
+            }
+        }
+        
+        
         ref = db.collection("posts").addDocument(data:[
             "uid": uid,
             "email": email,
-            "date": result
+            "date": result,
+            "post": finalString,
+            "array": newList
         ]) { err in
             if let err = err {
                 print("Error adding doucument: \(err)")
@@ -58,11 +110,8 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
                 let postID = ref!.documentID
                 self.db.collection("users").document(uid).updateData([
                     "posts": FieldValue.arrayUnion([postID])])
-                var list = self.myTextView!.getParts()
-                let storageRef = self.storage.reference()
                 let nsurl: NSURL = NSURL()
                 let uiimage: UIImage = UIImage()
-                var finalString: String = ""
                 for var index in 0..<list.count {
                     if type(of: list[index]) == type(of: nsurl) {
                         let documentRef = storageRef.child("posts/\(postID)/documents/\((list[index+1] as! String).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)")
@@ -80,41 +129,39 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
                                     print("couldnt downloadurl")
                                     return
                                 }
-                                print(downloadURL)
-                                finalString.append("## doc=\"\(downloadURL.absoluteString)##\(list[index+1])##>\n")
-                                print(finalString)
+                                self.db.collection("posts").document(postID).updateData(["\(index)": downloadURL.absoluteString])
                             }
                         }
                         print(uploadTask)
                         
                         index += 1
-                    } else if type(of: list[index]) == type(of: uiimage) {
-                        let data = (list[index] as! UIImage).pngData()!
+
                         
-                        let imageRef = storageRef.child("posts/\(postID)/images/\((list[index]))")
-                        let uploadTask = imageRef.putData(data, metadata: nil) { (metadata, error) in
+                    } else if type(of: list[index]) == type(of: uiimage) {
+                        let imageRef = storageRef.child("posts/\(postID)/images/\(list[index])")
+                        let data = (list[index] as! UIImage).pngData()!
+
+                        let uploadTask = imageRef.putData(data, metadata: nil) { metadata, error in
                             guard let metadata = metadata else {
                                 return
+                                //error occurred
                             }
                             let size = metadata.size
                             print(size)
-                            imageRef.downloadURL {(url, error) in
+                            imageRef.downloadURL { (url, error) in
                                 guard let downloadURL = url else {
+                                    //error occurred
                                     print("couldnt downloadurl")
                                     return
                                 }
-                                print(downloadURL)
-                                finalString.append("## img=\"\(downloadURL.absoluteString)>\n")
-                                print(finalString)
+                                self.db.collection("posts").document(postID).updateData(["\(index)": downloadURL.absoluteString])
                             }
                         }
                         print(uploadTask)
                         
-                    } else {
-                        finalString.append(list[index] as! String)
-                        finalString.append("\n")
                     }
                 }
+                finalString = finalString.replacingOccurrences(of: "\n", with: "\n")
                 
                 self.db.collection("posts").document(postID).updateData([
                     "content": finalString]) { err in
@@ -136,6 +183,7 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
 //        }
 ////        db.collection
 //        print(list)
+        print(finalString)
         print("done posting")
 //        self.dismiss(animated: true, completion: nil)
         self.navigationController?.popViewController(animated: true)

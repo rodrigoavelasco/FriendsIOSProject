@@ -7,14 +7,17 @@
 //
 
 import UIKit
+
+import AVFoundation
 import Firebase
 import CoreData
 import FirebaseFirestore
 import FirebaseFirestoreSwift
 import CoreLocation
+import FirebaseStorage
 
 
-class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocationManagerDelegate {
+class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
 
     
     @IBOutlet weak var name: UILabel!
@@ -35,6 +38,8 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     
     var datePicker: UIDatePicker!
     
+    let picker = UIImagePickerController()
+    
     var currentVC: UIViewController!
     
     
@@ -54,6 +59,8 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     
     let db = Firestore.firestore()
     
+    let storage = Storage.storage()
+    
     var locationManager = CLLocationManager()
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -68,6 +75,8 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
         locationText.delegate = self
         
         locationManager.delegate = self
+        
+        picker.delegate = self
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -252,8 +261,120 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
         checkPersonal()
         if personal {
             editImage = true
+            let imageAlert = UIAlertController(title: "Profile Picture", message: "Do you wish to select a photo from your phone or take a picture instead?", preferredStyle: UIAlertController.Style.actionSheet)
+            imageAlert.addAction(UIAlertAction(title: "Photo Roll", style: .default, handler: { action in
+                self.picker.allowsEditing = false
+                self.picker.sourceType = .photoLibrary
+                self.currentVC.present(self.picker, animated: true, completion: nil)
+            }))
+            imageAlert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { action in
+                if UIImagePickerController.availableCaptureModes(for: .rear) != nil {
+                    switch AVCaptureDevice.authorizationStatus(for: .video) {
+                    case .notDetermined:
+                        AVCaptureDevice.requestAccess(
+                        for: .video) {
+                            accessGranted in
+                            guard accessGranted == true else { return }
+                        }
+                    case .authorized:
+                        break
+                    default:
+                        print("Access denied")
+                        return
+                    }
+                    self.picker.allowsEditing = false
+                    self.picker.sourceType = .camera
+                    self.picker.cameraCaptureMode = .photo
+                
+                    self.currentVC!.present(self.picker, animated: true, completion: nil)
+                    
+                } else {
+                    // no camera is available, pop up an alert
+                    let alertVC = UIAlertController(
+                        title: "No camera",
+                        message: "Sorry, this device has no camera",
+                        preferredStyle: .alert)
+                    let okAction = UIAlertAction(
+                        title: "OK",
+                        style: .default,
+                        handler: nil)
+                    alertVC.addAction(okAction)
+                    self.currentVC!.present(alertVC, animated: true, completion: nil)
+                }
+
+            }))
+
+            currentVC?.present(imageAlert, animated: true, completion: nil)
+            editImage = false
+            imageSetView!.isHidden = true
+            imageTapToSet!.isHidden = true
         }
     }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+                
+        // info contains a "dictionary" of information about the selected media, including:
+        // - metadata
+        // - a user-edited image (if you had allowed editing earlier)
+        
+        // get the selected picture:  this is the only part of info that we care about here
+        // original image, edited image, filesystem URL (for movie), relevant editing info
+        var chosenImage = info[.originalImage] as! UIImage
+            
+        let height = chosenImage.size.height
+        let width = chosenImage.size.width
+        var origRatio: CGFloat = 0
+        if (height < width) {
+            origRatio = userImage!.frame.size.width / width
+        } else {
+            origRatio = userImage!.frame.size.height / height
+        }
+            
+            
+        let size = chosenImage.size
+        let finalWidth = size.width * origRatio
+        let finalHeight = size.height * origRatio
+        let newSize: CGSize = CGSize(width: finalWidth, height: finalHeight)
+        let rect = CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height)
+        UIGraphicsBeginImageContextWithOptions(newSize, false, 1.0)
+        chosenImage.draw(in: rect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        chosenImage = newImage!
+        
+        db.collection("userimages").document(uid!).updateData(["image": ""])
+                
+        let storageRef = self.storage.reference()
+
+        let imageRef = storageRef.child("userimages/\(uid!)/\(chosenImage)")
+        let data = chosenImage.pngData()!
+        
+        let uploadTask = imageRef.putData(data, metadata: nil) {            metadata, error in
+            guard let metadata = metadata else {
+                return
+                //error occurred
+            }
+            let size = metadata.size
+            print(size)
+            imageRef.downloadURL { (url, error) in
+                guard let downloadURL = url else {
+                    //error occurred
+                    print("couldn't downloadurl")
+                    return
+                }
+                self.db.collection("users").document(self.uid!).updateData(["image": downloadURL.absoluteString])
+                self.db.collection("userimages").document(self.uid!).updateData(["image": downloadURL.absoluteString])
+                
+                self.userImage!.load(url: URL(string: downloadURL.absoluteString)!)
+                
+            }
+        }
+        print(uploadTask)
+        
+        currentVC.dismiss(animated: true, completion: nil)
+        
+    }
+
     
     @IBAction func birthdayPressed(_ sender: Any) {
         closeTexts()
@@ -409,3 +530,4 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
 //    
 //    
 //}
+

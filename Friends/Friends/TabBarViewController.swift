@@ -14,6 +14,7 @@ class TabBarViewController: UITabBarController {
     
     
     let userEmail:String = (Auth.auth().currentUser?.email)!
+    let useruid:String = (Auth.auth().currentUser?.uid)!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +42,24 @@ class TabBarViewController: UITabBarController {
             NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
             abort()
         }
-        return (fetchedResults![0].value(forKey: "darkmode") != nil)
+        if fetchedResults!.count >= 1 {
+            return (fetchedResults![0].value(forKey: "darkmode") != nil)
+        } else {
+            let user = NSEntityDescription.insertNewObject(forEntityName: "Settings", into: context)
+            user.setValue(userEmail, forKey: "email")
+            user.setValue(useruid, forKey: "uid")
+            user.setValue(false, forKey: "darkmode")
+            user.setValue(true, forKey: "screensecurity")
+            
+            do {
+                try context.save()
+            } catch {
+                let nserror = error as NSError
+                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
+            return false
+        }
     }
     
     func darkMode(){
