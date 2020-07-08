@@ -24,6 +24,15 @@ class TabBarViewController: UITabBarController {
     func darkMode(){
         overrideUserInterfaceStyle = .dark
     }
+    
+    func screenSecurity(){
+//        let blurEffect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+//        let blurEffectView = UIVisualEffectView(effect: blurEffect)
+//        blurEffectView.frame = window!.frame
+//        blurEffectView.tag = 221122
+//        self.window?.addSubview(blurEffectView)
+
+    }
 
     /*
     // MARK: - Navigation
