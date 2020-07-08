@@ -26,8 +26,13 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
                     print("Document data: \(dataDescription)")
                     let map = document.data()!
-                    cell.homeNameLabel!.text = map["name"] as! String
-                    cell.homeUserNameLabel!.text = map["username"] as! String
+                    cell.homeNameLabel!.text = map["name"] as? String
+                    cell.homeUserNameLabel!.text = map["username"] as? String
+                    if map["image"] != nil {
+                        cell.homeUserImageView!.load(url: URL(string: map["image"] as! String)!)
+                    } else {
+                        cell.homeUserImageView!.image = UIImage(named: "blank-profile-picture")
+                    }
                 } else {
                     print("Document does not exist")
                 }

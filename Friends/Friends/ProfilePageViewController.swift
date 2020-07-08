@@ -11,6 +11,9 @@ import Firebase
 import CoreData
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import FirebaseStorage
+import AVFoundation
+import Foundation
 
 class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -52,10 +55,11 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                         cell.location!.text = "Tap to set"
                     }
                     if map["image"] != nil {
-                        cell.userImage!.image = UIImage(named: "blank-profile-picture")
+                        cell.userImage!.load(url: URL(string: (map["image"] as? String)!)!)
                     } else {
                         cell.imageSetView!.isHidden = false
                         cell.imageTapToSet!.isHidden = false
+                        cell.userImage!.image = UIImage(named: "blank-profile-picture")
                     }
                 } else {
                     print("Document does not exist")
@@ -104,6 +108,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     @IBOutlet var tableView: UITableView!
     var uid: String!
     let db = Firestore.firestore()
+    let storage = Storage.storage()
     var posts: [String]!
     
     
@@ -154,4 +159,18 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
         self.view.endEditing(true)
     }
 
+}
+
+extension UIImageView {
+    func load(url: URL) {
+        DispatchQueue.global().async { [weak self] in
+            if let data = try? Data(contentsOf: url) {
+                if let image = UIImage(data: data) {
+                    DispatchQueue.main.async {
+                        self?.image = image
+                    }
+                }
+            }
+        }
+    }
 }

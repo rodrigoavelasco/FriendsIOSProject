@@ -197,6 +197,7 @@ class NewPostTableViewCell: UITableViewCell, UIImagePickerControllerDelegate, UI
         combination.append(postContent.attributedText!.mutableCopy() as! NSMutableAttributedString)
         combination.append(fullString)
         combination.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 22), range: NSRange())
+        combination.append(NSAttributedString(string: "\n", attributes: nil))
         postContent.attributedText = combination
         
         // dismiss the popover
