@@ -165,10 +165,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
+        loadUserSettings()
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        loadUserSettings()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -210,12 +210,14 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             abort()
         }
         darkMode = (fetchedResults![0].value(forKey: "darkmode") != nil)
+        if darkMode {
+            darkModeSwitch.isOn = true
+        }
     }
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
 
         if darkMode{
-            darkModeSwitch.isOn = true
             (tabBarController as! TabBarViewController).darkMode()
         }
     }
