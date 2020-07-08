@@ -214,7 +214,7 @@
                                                     </state>
                                                     <connections>
                                                         <action selector="newPostPressed:" destination="aui-rf-vlu" eventType="touchUpInside" id="I9H-pS-n1h"/>
-                                                        <segue destination="PLX-bJ-UgJ" kind="show" id="wDz-9I-eqo"/>
+                                                        <segue destination="NUL-8T-fYG" kind="show" id="JBH-ka-L5N"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -344,56 +344,79 @@
             <point key="canvasLocation" x="2579.7101449275365" y="138.61607142857142"/>
         </scene>
         <!--New Post-->
-        <scene sceneID="CGt-4h-Swn">
+        <scene sceneID="NXS-Kn-Bf4">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="PLX-bJ-UgJ" customClass="NewPostViewController" customModule="Friends" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="UNN-uq-nvj">
+                <tableViewController id="NUL-8T-fYG" customClass="NewPostTableViewController" customModule="Friends" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="0xK-e0-zOO">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="What do you want to say?" translatesAutoresizingMaskIntoConstraints="NO" id="fcj-Ib-xOZ">
-                                <rect key="frame" x="0.0" y="56" width="414" height="604"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                                <color key="textColor" white="0.5" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                            </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yKa-l3-cnJ">
-                                <rect key="frame" x="0.0" y="657" width="138" height="138"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button" image="gallery-icon"/>
-                                <connections>
-                                    <action selector="imageButtonPressed:" destination="PLX-bJ-UgJ" eventType="touchUpInside" id="Vi4-2i-rFW"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HTE-Py-nw6">
-                                <rect key="frame" x="138" y="657" width="138" height="138"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button" image="camera"/>
-                                <connections>
-                                    <action selector="cameraButtonPressed:" destination="PLX-bJ-UgJ" eventType="touchUpInside" id="14k-OB-IDQ"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xP0-sL-ESb">
-                                <rect key="frame" x="276" y="657" width="138" height="138"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Button" image="paperclip-icon"/>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <viewLayoutGuide key="safeArea" id="6DV-HT-Dh1"/>
-                    </view>
-                    <navigationItem key="navigationItem" title="New Post" id="5zR-2x-lsI">
-                        <barButtonItem key="rightBarButtonItem" title="Post" id="Wde-4g-vRm"/>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="Dhd-KQ-cRE">
+                            <rect key="frame" x="0.0" y="506" width="414" height="0.0"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        </view>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="post" rowHeight="450" id="P3u-RR-txt" customClass="NewPostTableViewCell" customModule="Friends" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="450"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="P3u-RR-txt" id="BfG-2W-wGR">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="450"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="5UA-ti-Naf">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="303"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="22"/>
+                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                                        </textView>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1aw-3m-neo">
+                                            <rect key="frame" x="0.0" y="311" width="138" height="138"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button" image="gallery-icon"/>
+                                            <connections>
+                                                <action selector="pictureButtonPressed:" destination="P3u-RR-txt" eventType="touchUpInside" id="Byt-ja-23G"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Yz3-pm-eqq">
+                                            <rect key="frame" x="138" y="311" width="138" height="138"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button" image="camera"/>
+                                            <connections>
+                                                <action selector="cameraButtonPressed:" destination="P3u-RR-txt" eventType="touchUpInside" id="yEi-Mj-bO2"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1cT-Xy-e0x">
+                                            <rect key="frame" x="276" y="311" width="138" height="138"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button" image="paperclip-icon"/>
+                                            <connections>
+                                                <action selector="fileButtonPressed:" destination="P3u-RR-txt" eventType="touchUpInside" id="aZe-YT-aDR"/>
+                                            </connections>
+                                        </button>
+                                    </subviews>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="cameraButton" destination="Yz3-pm-eqq" id="t0i-js-bRT"/>
+                                    <outlet property="pictureButton" destination="1aw-3m-neo" id="rfT-cz-7Dc"/>
+                                    <outlet property="postContent" destination="5UA-ti-Naf" id="Vbz-C3-Hs6"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="NUL-8T-fYG" id="n3w-Lm-NSA"/>
+                            <outlet property="delegate" destination="NUL-8T-fYG" id="0QB-tD-hpR"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="New Post" id="icO-L7-o7l">
+                        <barButtonItem key="rightBarButtonItem" title="Post" id="rd6-bd-BQZ"/>
                     </navigationItem>
-                    <connections>
-                        <outlet property="myTextView" destination="fcj-Ib-xOZ" id="1BU-uX-UqB"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="gYA-Ri-XXf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rdk-fh-cH6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3350.7246376811595" y="499.55357142857139"/>
+            <point key="canvasLocation" x="3350.7246376811595" y="526.33928571428567"/>
         </scene>
         <!--My Profile Page-->
         <scene sceneID="TNB-qQ-eE3">
@@ -1217,7 +1240,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="H3s-ok-xuj"/>
+        <segue reference="Nwa-Ld-M2K"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Home" width="21" height="23"/>

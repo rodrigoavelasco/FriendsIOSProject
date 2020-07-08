@@ -17,6 +17,8 @@
 		49369F4D24AEBB1F00396ABD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49369F4C24AEBB1E00396ABD /* Assets.xcassets */; };
 		493FD47B24ABE909007DF669 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FD47A24ABE909007DF669 /* HomeViewController.swift */; };
 		493FD47D24ABEA67007DF669 /* HomeUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FD47C24ABEA67007DF669 /* HomeUserTableViewCell.swift */; };
+		4942262624B516C50097C133 /* NewPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4942262524B516C50097C133 /* NewPostTableViewController.swift */; };
+		4942262824B5188C0097C133 /* NewPostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4942262724B5188C0097C133 /* NewPostTableViewCell.swift */; };
 		4943AEC024B1407C00B566F6 /* UserProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4943AEBF24B1407C00B566F6 /* UserProfileTableViewCell.swift */; };
 		4943AEC224B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4943AEC124B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift */; };
 		4943AEC424B1419C00B566F6 /* FriendTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4943AEC324B1419C00B566F6 /* FriendTableViewCell.swift */; };
@@ -49,6 +51,8 @@
 		49369F4C24AEBB1E00396ABD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		493FD47A24ABE909007DF669 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		493FD47C24ABEA67007DF669 /* HomeUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUserTableViewCell.swift; sourceTree = "<group>"; };
+		4942262524B516C50097C133 /* NewPostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableViewController.swift; sourceTree = "<group>"; };
+		4942262724B5188C0097C133 /* NewPostTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableViewCell.swift; sourceTree = "<group>"; };
 		4943AEBF24B1407C00B566F6 /* UserProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileTableViewCell.swift; sourceTree = "<group>"; };
 		4943AEC124B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfileFriendsListTableViewCell.swift; sourceTree = "<group>"; };
 		4943AEC324B1419C00B566F6 /* FriendTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendTableViewCell.swift; sourceTree = "<group>"; };
@@ -136,7 +140,9 @@
 				87A2834924A81E0F005D5725 /* SceneDelegate.swift */,
 				87A2834B24A81E0F005D5725 /* ViewController.swift */,
 				87A2834D24A81E0F005D5725 /* Main.storyboard */,
+				4942262724B5188C0097C133 /* NewPostTableViewCell.swift */,
 				49DE369D24B2A08600630AFE /* NewPostViewController.swift */,
+				4942262524B516C50097C133 /* NewPostTableViewController.swift */,
 				49DE369924B25F9D00630AFE /* CommentsViewController.swift */,
 				49DE369724B2574100630AFE /* CommentTableViewCell.swift */,
 				4943AEC124B1416300B566F6 /* UserProfileFriendsListTableViewCell.swift */,
@@ -279,6 +285,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4942262824B5188C0097C133 /* NewPostTableViewCell.swift in Sources */,
 				493FD47B24ABE909007DF669 /* HomeViewController.swift in Sources */,
 				87A2834C24A81E0F005D5725 /* ViewController.swift in Sources */,
 				4947CB7D24B24505005ACAB1 /* PostTableViewCell.swift in Sources */,
@@ -299,6 +306,7 @@
 				493FD47D24ABEA67007DF669 /* HomeUserTableViewCell.swift in Sources */,
 				4935AFE824AC3EE4007C4DCC /* SettingsViewController.swift in Sources */,
 				49DE369E24B2A08600630AFE /* NewPostViewController.swift in Sources */,
+				4942262624B516C50097C133 /* NewPostTableViewController.swift in Sources */,
 				49DE36A024B2A34700630AFE /* CommentsTableViewController.swift in Sources */,
 				49DE36A224B2A51800630AFE /* User.swift in Sources */,
 			);

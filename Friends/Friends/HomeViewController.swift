@@ -104,8 +104,8 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
-        print(segue.identifier!)
-        if segue.identifier! == "My Profile Segue" {
+//        print(segue.identifier!)
+        if segue.identifier != nil && segue.identifier! == "My Profile Segue" {
             print("My Profile Segue")
             if let tvc = segue.destination as? ProfilePageViewController {
                 tvc.uid = uid!

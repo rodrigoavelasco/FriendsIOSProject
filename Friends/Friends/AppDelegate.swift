@@ -23,7 +23,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let db = Firestore.firestore()
         
         print(db) // silence warning
+        
+        let storage = Storage.storage()
 
+        print(storage)
 
         return true
     }
