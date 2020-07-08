@@ -91,7 +91,6 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             cell.addPost(postID: posts[posts.count - 1 - postNumber])
             
 
-            
             return cell
         }
         
@@ -99,28 +98,31 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 0 {
-            return 210
-        } else if indexPath.row == 1 {
-            return 40
-        } else if indexPath.row == 2 {
-            return 132
-        } else if indexPath.row == 3 {
-            return 40
-        } else if indexPath.row >= 4 {
-            let tempIndexPath = IndexPath(row: indexPath.row, section: 0)
-            let cell = self.tableView.cellForRow(at: tempIndexPath) as? PostTableViewCell
-            var result: CGFloat = 25
-            result += (cell?.userImage!.frame.size.height) ?? 0
-            result += (cell?.postText!.frame.size.height) ?? 0
-            if result == 25 {
-                return 150
-            }
-            return result
-        }
-        else {
-            return 200
-        }
+//        if indexPath.row == 0 {
+//            return 210
+//        } else if indexPath.row == 1 {
+//            return 40
+//        } else if indexPath.row == 2 {
+//            return 132
+//        } else if indexPath.row == 3 {
+//            return 40
+//        } else if indexPath.row >= 4 {
+//            let tempIndexPath = IndexPath(row: indexPath.row, section: 0)
+//            let cell = self.tableView.cellForRow(at: tempIndexPath) as? PostTableViewCell
+//            var result: CGFloat = 25
+//            result += (cell?.userImage!.frame.size.height) ?? 0
+//            result += (cell?.postText!.frame.size.height) ?? 0
+//            if result == 25 {
+//                return 150
+//            }
+//            return result
+//        }
+//        else {
+//            return 200
+//        }
+        
+        return UITableView.automaticDimension
+        
     }
     
 
@@ -195,10 +197,18 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                 print("Document does not exist")
             }
         }
-
-
+        
+        
+//        self.tableView.estimatedRowHeight = UITableView.automaticDimension
+//        self.tableView.rowHeight = UITableView.automaticDimension
+        
+        
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+        tableView.reloadData()
+    }
 
     /*
     // MARK: - Navigation
