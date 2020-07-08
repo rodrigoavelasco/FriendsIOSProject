@@ -411,7 +411,11 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="New Post" id="icO-L7-o7l">
-                        <barButtonItem key="rightBarButtonItem" title="Post" id="rd6-bd-BQZ"/>
+                        <barButtonItem key="rightBarButtonItem" title="Post" id="rd6-bd-BQZ">
+                            <connections>
+                                <action selector="postButtonPressed:" destination="NUL-8T-fYG" id="adN-sl-fjL"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rdk-fh-cH6" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

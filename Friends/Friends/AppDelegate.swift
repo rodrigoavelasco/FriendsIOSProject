@@ -11,6 +11,7 @@ import CoreData
 import Firebase
 import FirebaseFirestore
 import CoreLocation
+import FirebaseStorage
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

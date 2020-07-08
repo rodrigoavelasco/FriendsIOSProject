@@ -12,6 +12,7 @@ import Firebase
 import CoreData
 import FirebaseFirestoreSwift
 import FirebaseFirestore
+import FirebaseStorage
 
 class NewPostTableViewController: UITableViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
@@ -24,12 +25,121 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
     var curIndexPath: IndexPath!
     
     var postCell: NewPostTableViewCell!
-        
+    
+    let db = Firestore.firestore()
+    let storage = Storage.storage()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         picker.delegate = self
         // Do any additional setup after loading the view.
         NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+    }
+    @IBAction func postButtonPressed(_ sender: Any) {
+        var ref: DocumentReference? = nil
+        let user = Auth.auth().currentUser!
+        let uid = user.uid
+        let email = user.email!
+        
+        let date = Date()
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMMM d, yyyy"
+        let result = formatter.string(from: date)
+        
+        ref = db.collection("posts").addDocument(data:[
+            "uid": uid,
+            "email": email,
+            "date": result
+        ]) { err in
+            if let err = err {
+                print("Error adding doucument: \(err)")
+                return
+            } else {
+                let postID = ref!.documentID
+                self.db.collection("users").document(uid).updateData([
+                    "posts": FieldValue.arrayUnion([postID])])
+                var list = self.myTextView!.getParts()
+                let storageRef = self.storage.reference()
+                let nsurl: NSURL = NSURL()
+                let uiimage: UIImage = UIImage()
+                var finalString: String = ""
+                for var index in 0..<list.count {
+                    if type(of: list[index]) == type(of: nsurl) {
+                        let documentRef = storageRef.child("posts/\(postID)/documents/\((list[index+1] as! String).addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!)")
+                        let localFile = list[index] as! URL
+                        let uploadTask = documentRef.putFile(from: localFile, metadata: nil) { metadata, error in
+                            guard let metadata = metadata else {
+                                return
+                                //error occurred
+                            }
+                            let size = metadata.size
+                            print(size)
+                            documentRef.downloadURL { (url, error) in
+                                guard let downloadURL = url else {
+                                    //error occurred
+                                    print("couldnt downloadurl")
+                                    return
+                                }
+                                print(downloadURL)
+                                finalString.append("## doc=\"\(downloadURL.absoluteString)##\(list[index+1])##>\n")
+                                print(finalString)
+                            }
+                        }
+                        print(uploadTask)
+                        
+                        index += 1
+                    } else if type(of: list[index]) == type(of: uiimage) {
+                        let data = (list[index] as! UIImage).pngData()!
+                        
+                        let imageRef = storageRef.child("posts/\(postID)/images/\((list[index]))")
+                        let uploadTask = imageRef.putData(data, metadata: nil) { (metadata, error) in
+                            guard let metadata = metadata else {
+                                return
+                            }
+                            let size = metadata.size
+                            print(size)
+                            imageRef.downloadURL {(url, error) in
+                                guard let downloadURL = url else {
+                                    print("couldnt downloadurl")
+                                    return
+                                }
+                                print(downloadURL)
+                                finalString.append("## img=\"\(downloadURL.absoluteString)>\n")
+                                print(finalString)
+                            }
+                        }
+                        print(uploadTask)
+                        
+                    } else {
+                        finalString.append(list[index] as! String)
+                        finalString.append("\n")
+                    }
+                }
+                
+                self.db.collection("posts").document(postID).updateData([
+                    "content": finalString]) { err in
+                        if let err = err {
+                            print("Error updating document: \(err)")
+                        } else {
+                            print("Document successfully updated")
+                        }
+                }
+                
+            }
+        }
+        
+//        var list = myTextView!.getParts()
+//        let imagesRef = storageRef.child("posts/")
+//
+//        for var item in list {
+//
+//        }
+////        db.collection
+//        print(list)
+        print("done posting")
+//        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
+
     }
     
     @IBAction func cameraButtonPressed(_ sender: Any) {
@@ -147,6 +257,7 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
 //        print("tell")
         curIndexPath = indexPath
         postCell = cell
+        myTextView = cell.postContent!
         return cell
     }
     
@@ -232,4 +343,42 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
 //    func keyboardwillHide(_ notification: Notification) {
 //        
 //    }
+}
+
+extension UITextView {
+    func getParts() -> [AnyObject] {
+        var parts = [AnyObject]()
+
+            let attributedString = self.attributedText!
+        let range = NSMakeRange(0, attributedString.length)
+        attributedString.enumerateAttributes(in: range, options: NSAttributedString.EnumerationOptions(rawValue: 0)) { (object, range, stop) in
+            if object.keys.contains(NSAttributedString.Key.attachment) {
+                if let attachment = object[NSAttributedString.Key.attachment] as? NSTextAttachment {
+                    if let image = attachment.image {
+                        parts.append(image)
+                    } else if let image = attachment.image(forBounds: attachment.bounds, textContainer: nil, characterIndex: range.location) {
+                        parts.append(image)
+                    }
+                }
+            } else if object.keys.contains(NSAttributedString.Key.link) {
+                if let attachment = object[NSAttributedString.Key.link] as? NSURL {
+                    
+                    parts.append(attachment)
+                    let stringValue: String = attributedString.attributedSubstring(from: range).string
+                    if (!stringValue.trimmingCharacters(in: .whitespaces).isEmpty) {
+                        parts.append(stringValue as AnyObject)
+                    }
+//                    print(type(of: attachment))
+                    
+                }
+            }
+            else {
+                let stringValue : String = attributedString.attributedSubstring(from: range).string
+                if (!stringValue.trimmingCharacters(in: .whitespaces).isEmpty) {
+                    parts.append(stringValue as AnyObject)
+                }
+            }
+        }
+        return parts
+    }
 }

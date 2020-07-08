@@ -22,12 +22,15 @@ class NewPostTableViewCell: UITableViewCell, UIImagePickerControllerDelegate, UI
     }
 
 
-    var vc: UIViewController!
+    var vc: NewPostTableViewController!
     
     @IBOutlet weak var postContent: UITextView!
     @IBOutlet weak var pictureButton: UIButton!
     @IBOutlet weak var cameraButton: UIButton!
     @IBOutlet weak var fileButton: UIButton!
+    
+    var files: [String] = Array<String>()
+    var pictures: [String] = Array<String>()
     
     var kbHeight: CGFloat!
     
@@ -40,7 +43,6 @@ class NewPostTableViewCell: UITableViewCell, UIImagePickerControllerDelegate, UI
 
         // Configure the view for the selected state
         postContent.becomeFirstResponder()
-        
     }
 
     @IBAction func pictureButtonPressed(_ sender: Any) {
@@ -90,7 +92,7 @@ class NewPostTableViewCell: UITableViewCell, UIImagePickerControllerDelegate, UI
     }
     
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        guard let myURL = urls.first else {
+        guard let myURL = urls.last else {
             return
         }
         print("import result : \(myURL.relativeString)")
@@ -114,6 +116,14 @@ class NewPostTableViewCell: UITableViewCell, UIImagePickerControllerDelegate, UI
         combination.append(postContent.attributedText!.mutableCopy() as! NSMutableAttributedString)
         combination.append(fullString)
         combination.addAttribute(NSAttributedString.Key.font, value: UIFont.systemFont(ofSize: 22), range: NSRange())
+        
+//        let documentAttachment = NSTextAttachment(data: fileData!, ofType: nil)
+//        let documentString = NSAttributedString(attachment: documentAttachment)
+//            combination.append(documentString)
+
+        
+        
+        combination.append(NSAttributedString(string:"\n", attributes: nil))
         postContent.attributedText = combination
         
         
@@ -144,7 +154,7 @@ class NewPostTableViewCell: UITableViewCell, UIImagePickerControllerDelegate, UI
 
     func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {
         print("view was cancelled")
-        vc.dismiss(animated: true, completion: nil)
+//        vc.dismiss(animated: true, completion: nil)
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
