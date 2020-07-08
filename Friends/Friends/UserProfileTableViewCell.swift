@@ -10,12 +10,12 @@ import UIKit
 import Firebase
 import CoreData
 import FirebaseFirestore
+import FirebaseStorage
 import FirebaseFirestoreSwift
 import CoreLocation
 
 
-class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocationManagerDelegate {
-
+class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocationManagerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var userName: UILabel!
@@ -34,11 +34,15 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     @IBOutlet weak var locationText: UITextField!
     
     var datePicker: UIDatePicker!
-    
     var currentVC: UIViewController!
+    var uid: String!
+    var imageUrl: String!
+    var currentLocation: String!
+    var locationManager = CLLocationManager()
+    private let db = Firestore.firestore()
+    private let storageRef = Storage.storage().reference()
     
-    
-    
+    // bools
     var editName: Bool = false
     var editUsername: Bool = false
     var editImage: Bool = false
@@ -46,15 +50,8 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     var editEmail: Bool = false
     var editPhone: Bool = false
     var editLocation: Bool = false
-    
-    var uid: String!
     var personal: Bool = false
-    
-    var currentLocation: String!
-    
-    let db = Firestore.firestore()
-    
-    var locationManager = CLLocationManager()
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -85,11 +82,12 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
     
     func closeTexts () {
         if personal {
+            let userRef = db.collection("users").document(uid!)
             if editName {
                 name!.text = nameText!.text!
                 name!.isHidden = false
                 nameText!.isHidden = true
-                db.collection("users").document(uid!).updateData(["name": name!.text!]) { err in
+                userRef.updateData(["name": name!.text!]) { err in
                     if let err = err {
                         print("Error updating document: \(err)")
                     } else {
@@ -103,7 +101,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
                 userName!.text = usernameText!.text!
                 userName!.isHidden = false
                 usernameText!.isHidden = true
-                db.collection("users").document(uid!).updateData(
+                userRef.updateData(
                 ["username": userName!.text!]) { err in
                     if let err = err {
                         print("Error updating document: \(err)")
@@ -115,7 +113,14 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
                 editUsername = false
             }
             if editImage {
-                
+                userRef.updateData(
+                ["image_url": self.imageUrl ?? ""]) { err in
+                    if let err = err {
+                        print("Error updating document: \(err)")
+                    } else {
+                        print("Document succesfully updated")
+                    }
+                }
                 editImage = false
             }
             if editEmail {
@@ -132,7 +137,6 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
                     self.emailText!.text! = Auth.auth().currentUser!.email!
                 }
                 email!.text! = emailText!.text!
-                let userRef = db.collection("users").document(uid)
                 userRef.updateData([
                     "email": email!.text!]) { err in
                         if let err = err {
@@ -149,7 +153,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
                 phone!.text! = phoneText!.text!
                 phone!.isHidden = false
                 phoneText!.isHidden = true
-                db.collection("users").document(uid!).updateData(["phone": phone!.text!]) { err in
+                userRef.updateData(["phone": phone!.text!]) { err in
                     if let err = err {
                         print("Error updating document: \(err)")
                     } else {
@@ -162,14 +166,13 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
                 location!.text! = locationText!.text!
                 locationText!.isHidden = true
                 location!.isHidden = false
-                db.collection("users").document(uid!).updateData(["location": location!.text!]) { err in
+                userRef.updateData(["location": location!.text!]) { err in
                     if let err = err {
                         print("Error updating document: \(err)")
                     } else {
                         print("Document successfully updated")
                     }
                 }
-                
                 editLocation = false
             }
         }
@@ -252,8 +255,68 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
         checkPersonal()
         if personal {
             editImage = true
+            userImage.contentMode = .scaleAspectFit
+            let picker = UIImagePickerController()
+            picker.sourceType = .photoLibrary
+            picker.delegate = self
+            picker.allowsEditing = true
+            picker.present(picker, animated: true)
+            
         }
     }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+            picker.dismiss(animated: true, completion: nil)
+            guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
+                return
+            }
+            guard let imageData = image.pngData() else {
+                return
+            }
+            
+        let name = self.userName.text!
+        let ref = self.storageRef.child("images/" + name + ".png")
+        ref.putData(imageData,
+                              metadata: nil,
+                              completion: {_, error in
+                                guard error == nil else {
+                                    print("Failed to upoad")
+                                    return
+                                }
+                                ref.downloadURL(completion: {
+                                    url, error in guard let url = url, error == nil else {
+                                        return
+                                    }
+                                    let urlString = url.absoluteString
+                                    print("Download URL: \(urlString)")
+                                    self.imageUrl = urlString
+//                                    UserDefaults.standard.set(urlString, forKey: "url")
+                                })})
+            // upload image data
+            // get download
+            // save download url to userDefaults
+        
+        //        guard let urlString = "" as? String, let url = URL(string: urlString) else {
+        //            return
+        //        }
+        //
+        //        URLSession.shared.dataTask(with: url, completionHandler: {
+        //            data, _, error in
+        //            guard let data = data, error == nil else {
+        //                return
+        //            }
+        //            DispatchQueue.main.async {
+        //                let image = UIImage(data: data)
+        //                self.userImage.image = image
+        //            }
+        //        })
+        //
+        //        TASK.RESUME()
+        }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+           picker.dismiss(animated: true, completion: nil)
+       }
     
     @IBAction func birthdayPressed(_ sender: Any) {
         closeTexts()
