@@ -242,7 +242,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
             abort()
         }
-        darkMode = (fetchedResults![0].value(forKey: "darkmode")) as! Bool
+        darkMode = (fetchedResults![0].value(forKey: "darkmode") != nil)
         if darkMode {
             darkModeSwitch.isOn = true
         } else {
