@@ -42,7 +42,7 @@ class NewCommentTableViewCell: UITableViewCell {
 
     @IBAction func submitComment(_ sender: Any) {
         let comment = newCommentText!.text!
-        if comment != "" {
+        if comment != "" && comment != "Type comment here" {
             var ref: DocumentReference? = nil
             let uid = Auth.auth().currentUser!.uid
             let dateFormatter = DateFormatter()
@@ -62,6 +62,8 @@ class NewCommentTableViewCell: UITableViewCell {
                         if let err = err {
                             print("Error updating document: \(err)")
                         } else {
+                            self.newCommentText!.textColor = UIColor(white: 0.5, alpha: 1.0)
+                            self.newCommentText!.text = "Type comment here"
                                 self.commentTVC!.tableView.reloadData()
                             
                         }
