@@ -17,6 +17,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     var darkMode = false
     var screenSecurity = false
     let userEmail:String = (Auth.auth().currentUser?.email)!
+    var tabBarDelegate: UITabBarControllerDelegate?
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
@@ -137,11 +138,25 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func toggleDarkMode(_ sender: UISwitch){
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate // gives a pointer to the class app delegate
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        var fetchedResults: [NSManagedObject]? = nil
+        let predicate = NSPredicate(format: "email MATCHES '\(userEmail)'")
+        request.predicate = predicate
+        
+        do{
+            try fetchedResults = context.fetch(request) as? [NSManagedObject]
+        } catch{
+            // error occurs
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        let settings = fetchedResults![0]
         if sender.isOn {
-            let appDelegate = UIApplication.shared.delegate as! AppDelegate // gives a pointer to the class app delegate
-            let context = appDelegate.persistentContainer.viewContext
-            let settings = NSEntityDescription.insertNewObject(forEntityName: "Settings", into: context)
-            
+
+            //NSEntityDescription.insertNewObject(forEntityName: "Settings", into: context)
             settings.setValue(userEmail, forKey: "email")
             settings.setValue(true, forKey: "darkmode")
             
@@ -154,6 +169,24 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
                 abort()
             }
+            darkMode = true
+            overrideUserInterfaceStyle = .dark
+        } else if !sender.isOn{
+
+            settings.setValue(userEmail, forKey: "email")
+            settings.setValue(false, forKey: "darkmode")
+            
+            // Commit changes
+            do {
+                try context.save()
+            } catch {
+                // error occurs
+                let nserror = error as NSError
+                NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                abort()
+            }
+            darkMode = false
+            overrideUserInterfaceStyle = .light
         }
     }
     
@@ -161,7 +194,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var tableView: UITableView!
     override func viewDidLoad() {
         (self.parent?.parent as! TabBarViewController).delegate = self
-
+        tabBarDelegate = (self.parent?.parent as! TabBarViewController).delegate
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
@@ -212,6 +245,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         darkMode = (fetchedResults![0].value(forKey: "darkmode") != nil)
         if darkMode {
             darkModeSwitch.isOn = true
+        } else {
+            darkModeSwitch.isOn = false
         }
     }
     
@@ -219,6 +254,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
 
         if darkMode{
             (tabBarController as! TabBarViewController).darkMode()
+        } else if !darkMode {
+            (tabBarController as! TabBarViewController).lightMode()
         }
     }
 

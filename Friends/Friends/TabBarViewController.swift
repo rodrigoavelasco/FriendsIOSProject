@@ -20,6 +20,8 @@ class TabBarViewController: UITabBarController {
         super.viewDidLoad()
         if isDarkModeOn(){
             darkMode()
+        } else{
+            lightMode()
         }
         // Do any additional setup after loading the view.
 //        self.tabBarController?.tabBar.items![1].image = UIImage(named: "Home.png")
@@ -64,6 +66,10 @@ class TabBarViewController: UITabBarController {
     
     func darkMode(){
         overrideUserInterfaceStyle = .dark
+    }
+    
+    func lightMode(){
+        overrideUserInterfaceStyle = .light
     }
     
     func screenSecurity(){
