@@ -21,8 +21,33 @@ class PostTableViewCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         like = false
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        var fetchedResults: [NSManagedObject]? = nil
+        let predicate = NSPredicate(format: "email MATCHES '\(Auth.auth().currentUser!.email!)'")
+        request.predicate = predicate
+        
+        do{
+            try fetchedResults = context.fetch(request) as? [NSManagedObject]
+        } catch{
+            // error occurs
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        let darkMode = (fetchedResults![0].value(forKey: "darkmode")) as! Bool
+        if darkMode {
+            likeButton!.imageView!.image = UIImage(named: "heart-unselected-dark")
+            self.darkMode = true
+        } else {
+            likeButton!.imageView!.image = UIImage(named: "heart-unselected")
+            self.darkMode = false
+        }
     }
 
+    @IBOutlet weak var blackLabel: UILabel!
+    @IBOutlet weak var whiteLabel: UILabel!
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var postDate: UILabel!
@@ -56,6 +81,10 @@ class PostTableViewCell: UITableViewCell {
     var reloaded: Bool = false
     var imgCount: Int = 0
     
+    var darkMode: Bool!
+    
+    var postID: String!
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
@@ -69,22 +98,47 @@ class PostTableViewCell: UITableViewCell {
     }
     
     @IBAction func likeButtonPressed(_ sender: Any) {
-        if !like! {
-            var count = Int(likeCount!.text!)!
-            count += 1
-            likeCount!.text = "\(count)"
-            likeButton.setImage(UIImage(named: "heart-selected"), for: .normal)
-            like = true
-        } else {
-            var count = Int(likeCount!.text!)!
-            count -= 1
-            likeCount!.text = "\(count)"
-            likeButton.setImage(UIImage(named: "heart-unselected"), for: .normal)
-            like = false
+        
+        let likeDocumentRef = db.collection("posts").document(postID)
+        likeDocumentRef.getDocument{ (document, error) in
+            
+            if let document = document, document.exists {
+                let map = document.data()!
+                if map["likes"] != nil {
+                    var likes = map["likes"] as! [String]
+                    if likes.contains(Auth.auth().currentUser!.uid) {
+                        print("-1")
+                        let likeRef = self.db.collection("posts").document(self.postID!)
+                        
+                        likeRef.updateData(["likes": FieldValue.arrayRemove([Auth.auth().currentUser!.uid])])
+                        if globalDark {
+                            self.likeButton!.imageView!.image = UIImage(named:"heart-unselected-dark")
+                        } else {
+                            self.likeButton!.imageView!.image = UIImage(named:"heart-unselected")
+                        }
+                        let likenum = Int(self.likeCount!.text!)
+                        self.likeCount!.text = "\(likenum! - 1)"
+                    } else {
+                        print("+1")
+                        let likeRef = self.db.collection("posts").document(self.postID!)
+                        
+                        likeRef.updateData(["likes": FieldValue.arrayUnion([Auth.auth().currentUser!.uid])])
+                        self.likeButton!.imageView!.image = UIImage(named:"heart-selected")
+                        let likenum = Int(self.likeCount!.text!)
+                        self.likeCount!.text = "\(likenum! + 1)"
+                        
+                    }
+                } else {
+                    self.db.collection("posts").document(self.postID).updateData(["likes": []])
+                }
+                
+            }
         }
+
     }
     
     func addPost(postID: String) {
+        self.postID = postID
         let userDocumentRef = db.collection("posts").document(postID)
         userDocumentRef.getDocument{ (document, error) in
             if let document = document, document.exists {
@@ -92,9 +146,22 @@ class PostTableViewCell: UITableViewCell {
                 print("Document data: \(dataDescription)")
                 let map = document.data()!
                 if map["likes"] != nil {
-                    self.likeCount!.text = "\(map["likes"] as! Int)"
+                    self.likeCount!.text = "\((map["likes"] as! [String]).count)"
+                    let likes: [String] = (map["likes"] as! [String])
+                    if likes.contains(Auth.auth().currentUser!.uid) {
+                        self.like = true
+                        self.likeButton!.imageView!.image = UIImage(named:"heart-selected")
+                    } else {
+                        self.like = false
+                        if globalDark {
+                            self.likeButton!.imageView!.image = UIImage(named:"heart-unselected-dark")
+                        } else {
+                            self.likeButton!.imageView!.image = UIImage(named:"heart-unselected")
+
+                        }
+                    }
                 } else {
-                    self.db.collection("posts").document(postID).updateData(["likes": 0])
+                    self.db.collection("posts").document(postID).updateData(["likes": []])
                 }
                 if map["comments"] != nil {
                     self.commentCount!.text = "\((map["comments"] as! [String]).count)"
@@ -109,56 +176,54 @@ class PostTableViewCell: UITableViewCell {
                 var skipNext: Bool = false
                 let array = map["array"] as! [String]
                 for index in 0..<array.count {
-                    if !skipNext {
-                        if array[index].contains("#doc#") {
-                            skipNext = true
-                            let str = array[index]
-                            let start = str.index(str.startIndex, offsetBy: 5)
-                            let end = str.index(str.endIndex, offsetBy: -5)
-                            let range = start ..< end
-                            let item = Int(String(str[range]))! + 1
+                    if array[index].contains("#doc#") {
+                        skipNext = true
+                        let str = array[index]
+                        let start = str.index(str.startIndex, offsetBy: 5)
+                        let end = str.index(str.endIndex, offsetBy: -5)
+                        let range = start ..< end
+                        let item = Int(String(str[range]))! + 1
 //                            print("########")
 //                            print(item)
 //                            print("########")
-                            let url = URL(string: map["\(item)"] as! String)
-                            let fullString = NSAttributedString(string: array[index+1], attributes: [.link: url!.absoluteURL])
-                            self.linkExists = true
-                            self.links.append(url!)
-                            self.linkNames.append(array[index+1])
-                            finalString.append(fullString)
-                        } else if array[index].contains("#img#") {
-                            self.imgCount += 1
-                            let str = array[index]
-                            let start = str.index(str.startIndex, offsetBy: 5)
-                            let end = str.index(str.endIndex, offsetBy: -5)
-                            let range = start ..< end
-                            let item = String(str[range])
-                            let url = URL(string: map[item] as! String)
-                            DispatchQueue.global().async {
-                                guard let imageData = try? Data(contentsOf: url!) else { return }
-                                
-                                let image = UIImage(data: imageData)
-                                DispatchQueue.main.async {
-                                    let imageAttachment = NSTextAttachment()
-                                    imageAttachment.image = image!
-                                    let image1string = NSAttributedString(attachment: imageAttachment)
-                                    finalString.append(image1string)
-                                    self.postText!.attributedText = finalString
-                                    self.postText!.sizeToFit()
+                        let url = URL(string: map["\(item)"] as! String)
+                        let fullString = NSAttributedString(string: array[index+1], attributes: [.link: url!.absoluteURL])
+                        self.linkExists = true
+                        self.links.append(url!)
+                        self.linkNames.append(array[index+1])
+                        finalString.append(fullString)
+                    } else if array[index].contains("#img#") {
+                        self.imgCount += 1
+                        let str = array[index]
+                        let start = str.index(str.startIndex, offsetBy: 5)
+                        let end = str.index(str.endIndex, offsetBy: -5)
+                        let range = start ..< end
+                        let item = String(str[range])
+                        let url = URL(string: map[item] as! String)
+                        DispatchQueue.global().async {
+                            guard let imageData = try? Data(contentsOf: url!) else { return }
+                            
+                            let image = UIImage(data: imageData)
+                            DispatchQueue.main.async {
+                                let imageAttachment = NSTextAttachment()
+                                imageAttachment.image = image!
+                                let image1string = NSAttributedString(attachment: imageAttachment)
+                                finalString.append(image1string)
+                                self.postText!.attributedText = finalString
+                                self.postText!.sizeToFit()
 //
-                                    self.imgCount -= 1
-                                    if self.imgCount == 0 {
-                                        if !self.reloaded {
-                                            self.reloaded = true
-                                            let indexPath = IndexPath(row: self.rowID, section: 0)
-                                            self.currentVC.tableView.reloadRows(at: [indexPath], with: .none
-                                            )
-                                        }
+                                self.imgCount -= 1
+                                if self.imgCount == 0 {
+                                    if !self.reloaded {
+                                        self.reloaded = true
+                                        let indexPath = IndexPath(row: self.rowID, section: 0)
+                                        self.currentVC.tableView.reloadRows(at: [indexPath], with: .none
+                                        )
                                     }
                                 }
                             }
-                            
                         }
+                        
                     } else {
                         if !skipNext {
                             let fullString = NSAttributedString(string: array[index], attributes: nil)
@@ -167,25 +232,40 @@ class PostTableViewCell: UITableViewCell {
                         skipNext = false
                         
                     }
-                    
-//                    let tempItem: NSAttributedString = NSAttributedString(string: item.replacingOccurrences(of: "\\n", with: "\n"))
-//
-//                    finalString.append(tempItem)
+
                 }
                 
-                
-                
-                
                 self.postText!.attributedText = finalString
-//                self.postText!.lineBreakMode = NSLineBreakMode.byWordWrapping
-//                self.postText!.numberOfLines = 0
-//                let tempLabel: UILabel = self.postText!
-//                tempLabel.sizeToFit()
-//                self.postText!.fr
-//                CGSize = CGSize(
-                self.postText!.sizeToFit()
+                self.postText!.text = finalString.string
+                let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                let context = appDelegate.persistentContainer.viewContext
+                let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+                var fetchedResults: [NSManagedObject]? = nil
+                let predicate = NSPredicate(format: "email MATCHES '\(Auth.auth().currentUser!.email!)'")
+                request.predicate = predicate
                 
-                let oldFont = self.postText!.font!
+                do{
+                    try fetchedResults = context.fetch(request) as? [NSManagedObject]
+                } catch{
+                    // error occurs
+                    let nserror = error as NSError
+                    NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                    abort()
+                }
+                let darkMode = (fetchedResults![0].value(forKey: "darkmode")) as! Bool
+                if darkMode {
+                    let string = finalString.string
+                    let range = (string as NSString).range(of: string)
+                    finalString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.white, range: range)
+                    self.postText!.textColor = UIColor.white
+                } else {
+                    let string = finalString.string
+                    let range = (string as NSString).range(of: string)
+                    finalString.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.black, range: range)
+                    self.postText!.textColor = UIColor.black
+                }
+                
+                self.postText!.sizeToFit()
                 
             } else {
                 print("Document does not exist")

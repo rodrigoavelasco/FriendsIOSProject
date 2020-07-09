@@ -80,6 +80,9 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var uid: String!
     var user: User!
     
+    var friends: [String] = []
+    var posts: [String] = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -90,6 +93,20 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         uid = Auth.auth().currentUser!.uid
         user = User(uid: Auth.auth().currentUser!.uid)
         SettingsViewController().loadUserSettings()
+        
+        let userDocumentRef = db.collection("users").document(uid!)
+        
+        userDocumentRef.getDocument { (document, error) in
+            if let document = document, document.exists {
+                let map = document.data()!
+                if map["friends"] != nil {
+                    self.friends = map["friends"] as! [String]
+                }
+                if map["posts"] != nil {
+                    self.posts = map["posts"] as! [String]
+                }
+            }
+        }
         
     }
     
@@ -117,6 +134,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 tvc.uid = uid!
 //                print(uid!)
 //                print(tvc.uid!)
+                let trans = CATransition()
+                trans.type = CATransitionType.moveIn
+                trans.subtype = CATransitionSubtype.fromLeft
+                trans.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
+                trans.duration = 0.35
+                self.navigationController?.view.layer.add(trans, forKey: nil)
                 
             }
         }

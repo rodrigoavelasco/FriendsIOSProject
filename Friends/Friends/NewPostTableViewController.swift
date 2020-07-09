@@ -303,6 +303,15 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
         cell.vc = self
 //        print (cell.postContent!.text!)
 //        print("tell")
+        if globalDark {
+            cell.cameraButton!.imageView!.image = UIImage(named:"camera-white")
+            cell.pictureButton!.imageView!.image = UIImage(named:"gallery-icon-white")
+            cell.fileButton!.imageView!.image = UIImage(named:"paperclip-icon-white")
+        } else {
+            cell.cameraButton!.imageView!.image = UIImage(named:"camera")
+            cell.pictureButton!.imageView!.image = UIImage(named:"gallery-icon")
+            cell.fileButton!.imageView!.image = UIImage(named:"paperclip-icon")
+        }
         curIndexPath = indexPath
         postCell = cell
         myTextView = cell.postContent!

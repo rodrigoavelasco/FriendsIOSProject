@@ -10,6 +10,8 @@ import UIKit
 import CoreData
 import FirebaseAuth
 
+var globalDark: Bool = false
+
 class TabBarViewController: UITabBarController {
     
     
@@ -45,7 +47,7 @@ class TabBarViewController: UITabBarController {
             abort()
         }
         if fetchedResults!.count >= 1 {
-            return (fetchedResults![0].value(forKey: "darkmode") != nil)
+            return (fetchedResults![0].value(forKey: "darkmode")) as! Bool
         } else {
             let user = NSEntityDescription.insertNewObject(forEntityName: "Settings", into: context)
             user.setValue(userEmail, forKey: "email")
@@ -65,10 +67,12 @@ class TabBarViewController: UITabBarController {
     }
     
     func darkMode(){
+        globalDark = true
         overrideUserInterfaceStyle = .dark
     }
     
     func lightMode(){
+        globalDark = false
         overrideUserInterfaceStyle = .light
     }
     

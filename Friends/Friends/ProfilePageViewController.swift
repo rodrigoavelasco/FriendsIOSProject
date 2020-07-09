@@ -79,7 +79,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                 }
             }
 
-
+            cell.layoutIfNeeded()
             return cell
         } else if indexPath.row == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "FriendsLabel", for: indexPath as IndexPath)
@@ -87,6 +87,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
         } else if indexPath.row == 2 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "FriendsList", for: indexPath as IndexPath) as! UserProfileFriendsListTableViewCell
             cell.uid = uid!
+            cell.layoutIfNeeded()
             return cell
         } else if indexPath.row == 3 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "PastPostsLabel", for: indexPath as IndexPath)
@@ -96,7 +97,11 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
 //                loadNextBatch()
 //            }
             let cell = tableView.dequeueReusableCell(withIdentifier: "Post", for: indexPath as IndexPath) as! PostTableViewCell
-            
+            if globalDark {
+                cell.likeButton!.imageView!.image = UIImage(named: "heart-unselected-dark")
+            } else {
+                cell.likeButton!.imageView!.image = UIImage(named: "heart-unselected")
+            }
             cell.uid = uid!
             cell.userName!.text = userName!
             if(imageString != nil) {
@@ -107,6 +112,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             cell.addPost(postID: posts[posts.count - 1 - postNumber])
             
             cell.rowID = indexPath.row
+            cell.layoutIfNeeded()
             return cell
         }
         
@@ -209,6 +215,8 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     
     @IBOutlet var blockButton: UIBarButtonItem!
     @IBOutlet var addButton: UIBarButtonItem!
+    @IBOutlet var deleteButton: UIBarButtonItem!
+    @IBOutlet var blankButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -217,6 +225,15 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.delegate = self
         tableView.dataSource = self
         tableView.prefetchDataSource = self
+        let myDocumentRef = db.collection("users").document(Auth.auth().currentUser!.uid)
+        myDocumentRef.getDocument{ (document, error) in
+            if let document = document, document.exists {
+                let map = document.data()!
+                if map["friends"] != nil {
+                    self.friends = map["friends"] as? [String]
+                }
+            }
+        }
         if Auth.auth().currentUser!.uid != uid {
             let userDocumentRef = db.collection("users").document(uid!)
             userDocumentRef.getDocument{ (document, error) in
@@ -233,10 +250,14 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                     print("Document does not exist")
                 }
             }
-            self.navigationItem.setRightBarButtonItems([blockButton, addButton], animated: true)
+            if friends.contains(uid!) {
+                self.navigationItem.setLeftBarButtonItems([blockButton, addButton], animated: true)
+            } else {
+                self.navigationItem.setLeftBarButtonItems([blockButton, deleteButton], animated: true)
+            }
         } else {
             self.navigationItem.title! = "My Profile Page"
-            self.navigationItem.setRightBarButtonItems(nil, animated: false)
+            self.navigationItem.setLeftBarButtonItems([blankButton], animated: false)
         }
         
         let userDocumentRef = db.collection("users").document(uid!)
@@ -294,6 +315,15 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
+    }
+    
+    @IBAction func backTapped() {
+        let trans = CATransition()
+        trans.type = CATransitionType.moveIn
+        trans.subtype = CATransitionSubtype.fromRight
+        trans.duration = 0.3
+        self.navigationController?.view.layer.add(trans, forKey: nil)
+        navigationController?.popViewController(animated: false)
     }
 
 }

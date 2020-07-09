@@ -267,6 +267,7 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
                 self.picker.sourceType = .photoLibrary
                 self.currentVC.present(self.picker, animated: true, completion: nil)
             }))
+            imageAlert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             imageAlert.addAction(UIAlertAction(title: "Camera", style: .default, handler: { action in
                 if UIImagePickerController.availableCaptureModes(for: .rear) != nil {
                     switch AVCaptureDevice.authorizationStatus(for: .video) {

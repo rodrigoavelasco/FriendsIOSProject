@@ -43,6 +43,28 @@ class NewPostTableViewCell: UITableViewCell, UIImagePickerControllerDelegate, UI
 
         // Configure the view for the selected state
         postContent.becomeFirstResponder()
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        var fetchedResults: [NSManagedObject]? = nil
+        let predicate = NSPredicate(format: "email MATCHES '\(Auth.auth().currentUser!.email!)'")
+        request.predicate = predicate
+        
+        do{
+            try fetchedResults = context.fetch(request) as? [NSManagedObject]
+        } catch{
+            // error occurs
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        let darkMode = (fetchedResults![0].value(forKey: "darkmode")) as! Bool
+        if darkMode {
+            postContent!.textColor = UIColor.white
+        } else {
+            postContent!.textColor = UIColor.black
+        }
+//        postContent!.textColor = UIColor.white
     }
 
     @IBAction func pictureButtonPressed(_ sender: Any) {
