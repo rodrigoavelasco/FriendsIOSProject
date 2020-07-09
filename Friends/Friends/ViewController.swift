@@ -79,7 +79,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
     }
     
     func performBiometricAuthentication(){
-        print("biometric Authentication!!!!!!1")
         let context = LAContext()
         var error: NSError?
 
