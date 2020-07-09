@@ -20,6 +20,8 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
     var results: [[String]] = []
     var index:Int = 0
     
+    var newSearch: Bool = true
+    
     private let noResultsLabel: UILabel = {
         let label = UILabel()
         label.isHidden = true
@@ -72,7 +74,9 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
             let url = arr[2]
             if let url = URL(string: url) {
                 DispatchQueue.global().async {
-                guard let imageData = try? Data(contentsOf: url) else { return }
+                guard let imageData = try? Data(contentsOf: url) else {
+                        
+                    return }
                     let image = UIImage(data: imageData)
                     DispatchQueue.main.async {
                         if cell.downloaded {
@@ -81,7 +85,14 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
                             cell.downloaded = false
                         }
                     }
+                    DispatchQueue.main.async {
+                        cell.downloaded = true
+                    }
                 }
+            }
+            if url == nil || url == "" {
+                cell.imageView?.image = nil
+                cell.downloaded = false
             }
         }
         return cell
@@ -102,6 +113,7 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
     }
     
     func searchUsers(query: String) {
+        newSearch = true
         let ref = db.collection("users")
         ref.whereField("name", isEqualTo: query).getDocuments { (snapshot, error) in
             if error != nil {

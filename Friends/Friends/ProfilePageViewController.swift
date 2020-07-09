@@ -20,7 +20,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
         if (posts != nil) {
-            if indexPaths.first!.row >= posts!.count + 2 {
+            if indexPaths.first!.row >= posts.count + 2 {
                 loadNextBatch()
             }
         }
@@ -179,7 +179,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                         self.posts = allPosts
 //                        self.reload = false
                     } else {
-                        let amount = self.posts!.count + 5
+                        let amount = self.posts.count + 5
                         if allPosts.count > amount {
                             let slice: ArraySlice<String> = allPosts[allPosts.count - amount ... allPosts.count - 1]
                             self.posts = Array<String>() + slice
@@ -201,15 +201,34 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
 
     }
     
-
+    @IBAction func blockButtonPressed(_ sender: Any) {
+        print("block button pressed")
+        db.collection("users").document(Auth.auth().currentUser!.uid).updateData(["blocked": FieldValue.arrayUnion([uid!])])
+        db.collection("users").document(Auth.auth().currentUser!.uid).updateData(["friends": FieldValue.arrayRemove([uid!])])
+        self.navigationItem.setRightBarButtonItems(nil, animated: false)
+        
+    }
+    @IBAction func deleteButtonPressed(_ sender: Any) {
+        print("delete button pressed")
+        db.collection("users").document(Auth.auth().currentUser!.uid).updateData(["friends": FieldValue.arrayRemove([uid!])])
+        self.navigationItem.setRightBarButtonItems([self.addButton, self.blockButton], animated: false)
+    }
+    @IBAction func addButtonPressed(_ sender: Any) {
+        print("add button pressed")
+        db.collection("users").document(Auth.auth().currentUser!.uid).updateData(["friends": FieldValue.arrayUnion([uid!])])
+        self.navigationItem.setRightBarButtonItems([self.deleteButton, self.blockButton], animated: false)
+    }
+    
     @IBOutlet var tableView: UITableView!
     var uid: String!
     var delegate:UIViewController!
     var container:[String]!
     let db = Firestore.firestore()
     let storage = Storage.storage()
-    var posts: [String]!
-    var friends: [String]!
+    var posts: [String] = []
+    var myFriends: [String] = []
+    var myBlocked: [String] = []
+    var friends: [String] = []
 //    var reload: Bool!
     var imageString: String!
     var userName: String!
@@ -222,21 +241,14 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        print (uid!)
 //        reload = false
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
         tableView.prefetchDataSource = self
-        let myDocumentRef = db.collection("users").document(Auth.auth().currentUser!.uid)
-        myDocumentRef.getDocument{ (document, error) in
-            if let document = document, document.exists {
-                let map = document.data()!
-                if map["friends"] != nil {
-                    self.friends = map["friends"] as? [String]
-                }
-            }
-        }
-        if Auth.auth().currentUser!.uid != uid {
+        
+        if Auth.auth().currentUser!.uid != uid! {
             let userDocumentRef = db.collection("users").document(uid!)
             userDocumentRef.getDocument{ (document, error) in
                 if let document = document, document.exists {
@@ -246,20 +258,45 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                     let username = map["name"] as! String
                     self.navigationItem.title! = username
                     if map["posts"] != nil {
-                        self.posts = map["posts"] as? [String]
+                        self.posts = (map["posts"] as? [String])!
                     }
+//                    print("my friends: \(self.myFriends)")
+                    let myDocumentRef = self.db.collection("users").document(Auth.auth().currentUser!.uid)
+                    myDocumentRef.getDocument{ (document, error) in
+                        if let document = document, document.exists {
+                            let map = document.data()!
+                            print("myUID: \(Auth.auth().currentUser!.uid)")
+                            print("friends: \(map["friends"] as! [String])")
+                            if map["friends"] != nil {
+                                self.myFriends = (map["friends"] as? [String])!
+                            }
+                            if map["blocked"] != nil {
+                                self.myBlocked = (map["blocked"] as? [String])!
+                            }
+                            print(self.myFriends)
+                            if self.myFriends.contains(self.uid!) {
+                                print("friend exeists")
+                                self.navigationItem.setRightBarButtonItems([self.deleteButton, self.blockButton], animated: true)
+                            } else{
+                                print("friend not exeists")
+                                self.navigationItem.setRightBarButtonItems([self.addButton, self.blockButton], animated: true)
+                            }
+                            if self.myBlocked.contains(self.uid!) {
+//                                self.navigationItem.title! = "My Profile Page"
+                                self.navigationItem.setRightBarButtonItems(nil, animated: false)
+
+                            }
+                        }
+                    }
+                    
                 } else {
                     print("Document does not exist")
                 }
             }
-            if friends.contains(uid!) {
-                self.navigationItem.setLeftBarButtonItems([blockButton, addButton], animated: true)
-            } else {
-                self.navigationItem.setLeftBarButtonItems([blockButton, deleteButton], animated: true)
-            }
+            
         } else {
             self.navigationItem.title! = "My Profile Page"
-            self.navigationItem.setLeftBarButtonItems([blankButton], animated: false)
+            self.navigationItem.setRightBarButtonItems(nil, animated: false)
         }
         
         let userDocumentRef = db.collection("users").document(uid!)
@@ -317,15 +354,6 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
-    }
-    
-    @IBAction func backTapped() {
-        let trans = CATransition()
-        trans.type = CATransitionType.moveIn
-        trans.subtype = CATransitionSubtype.fromRight
-        trans.duration = 0.3
-        self.navigationController?.view.layer.add(trans, forKey: nil)
-        navigationController?.popViewController(animated: false)
     }
 
 }
