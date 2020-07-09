@@ -51,13 +51,60 @@ class ViewController: UIViewController, UITextFieldDelegate {
         if userEmail == ""{
             print("need to log in")
         } else{
-            performBiometricAuthentication()
+            let biometricBoolean = getBiometricAuthenticationBoolean()
+            if biometricBoolean{
+                performBiometricAuthentication()
+            }
         }
     }
     
+    func getBiometricAuthenticationBoolean() -> Bool {
+        let userID: String = (Auth.auth().currentUser?.uid) ?? ""
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        var fetchedResults: [NSManagedObject]? = nil
+        let predicate = NSPredicate(format: "uid MATCHES '\(userID)'")
+        request.predicate = predicate
+        
+        do{
+            try fetchedResults = context.fetch(request) as? [NSManagedObject]
+        } catch{
+            // error occurs
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        return fetchedResults![0].value(forKey: "biometriclogin") as! Bool
+    }
+    
     func performBiometricAuthentication(){
-        self.performSegue(withIdentifier: "homeScreenSegueIdentifier", sender: nil)
-        self.initializeTextFields()
+        print("biometric Authentication!!!!!!1")
+        let context = LAContext()
+        var error: NSError?
+
+        if context.canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: &error) {
+            let reason = "Identify yourself!"
+
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: reason) {
+                [weak self] success, authenticationError in
+                DispatchQueue.main.async {
+                    if success {
+                        self?.performSegue(withIdentifier: "homeScreenSegueIdentifier", sender: nil)
+                    } else {
+                        // error
+                        let ac = UIAlertController(title: "Authentication failed", message: "You could not be verified; please try again.", preferredStyle: .alert)
+                        ac.addAction(UIAlertAction(title: "OK", style: .default))
+                        self?.present(ac, animated: true)
+                    }
+                }
+            }
+        } else {
+            // no biometry
+            let ac = UIAlertController(title: "Biometry unavailable", message: "Your device is not configured for biometric authentication.", preferredStyle: .alert)
+            ac.addAction(UIAlertAction(title: "OK", style: .default))
+            self.present(ac, animated: true)
+        }
     }
 
     @IBAction func logInButtonPressed(_ sender: Any) {
