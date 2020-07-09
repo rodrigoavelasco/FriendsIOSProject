@@ -62,11 +62,7 @@ class NewCommentTableViewCell: UITableViewCell {
                         if let err = err {
                             print("Error updating document: \(err)")
                         } else {
-                            let queue = DispatchQueue.init(label:"aoeu", qos: .userInitiated)
-                            queue.async {
-                                usleep(500000)
                                 self.commentTVC!.tableView.reloadData()
-                            }
                             
                         }
                     }
