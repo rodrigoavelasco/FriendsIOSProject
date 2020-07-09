@@ -165,7 +165,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             cellHeights[indexPath] = 0
         }
         
-        return cellHeights[indexPath]! + cellStringHeights[indexPath]! + 80
+        return UITableView.automaticDimension
 
         
     }

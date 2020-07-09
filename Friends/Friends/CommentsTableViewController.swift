@@ -64,7 +64,19 @@ class CommentsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(comments.count)
+        let docsRef = db.collection("posts").document(postID)
+        docsRef.getDocument { (document, error) in
+            if (error != nil) {
+                print(error)
+                return
+            }
+            let map = document!.data()!
+            if map["comments"] != nil {
+                self.comments = map["comments"] as! [String]
+            }
+            
+        }
+
         return 3 + comments.count
     }
     
