@@ -128,6 +128,8 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
 
     @IBOutlet var tableView: UITableView!
     var uid: String!
+    var delegate:UIViewController!
+    var container:[String]!
     let db = Firestore.firestore()
     let storage = Storage.storage()
     var posts: [String]!
@@ -223,7 +225,6 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
-
 }
 
 extension UIImageView {
