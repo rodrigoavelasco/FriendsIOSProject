@@ -204,6 +204,8 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
 
     @IBOutlet var tableView: UITableView!
     var uid: String!
+    var delegate:UIViewController!
+    var container:[String]!
     let db = Firestore.firestore()
     let storage = Storage.storage()
     var posts: [String]!
@@ -327,7 +329,6 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     }
 
 }
-
 extension UIImageView {
     func load(url: URL) {
         DispatchQueue.global().async { [weak self] in

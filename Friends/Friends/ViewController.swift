@@ -10,6 +10,8 @@ import UIKit
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import LocalAuthentication
+import CoreData
 
 class ViewController: UIViewController, UITextFieldDelegate {
 
@@ -22,6 +24,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var fullNameTextField: UITextField!
     @IBOutlet weak var createAccountButton: UIButton!
     @IBOutlet weak var currentUserButton: UIButton!
+    var userEmail:String = ""
     
     let db = Firestore.firestore()
     
@@ -31,7 +34,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
 //        overrideUserInterfaceStyle = .dark ill fix this when dark mode is implemented properly
         initializeTextFields()
         customizeButton(button: logInButton)
-        customizeButton(button: signUpButton) 
+        customizeButton(button: signUpButton)
         customizeButton(button: createAccountButton)
         customizeButton(button: currentUserButton)
         self.confirmPasswordTextField.center.x += self.view.bounds.width
@@ -39,6 +42,22 @@ class ViewController: UIViewController, UITextFieldDelegate {
         self.usernameTextField.center.x += self.view.bounds.width
         self.createAccountButton.center.x += self.view.bounds.width
         self.currentUserButton.center.x += self.view.bounds.width
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        userEmail = (Auth.auth().currentUser?.email) ?? ""
+        print("here is the user email: \(userEmail)")
+        if userEmail == ""{
+            print("need to log in")
+        } else{
+            performBiometricAuthentication()
+        }
+    }
+    
+    func performBiometricAuthentication(){
+        self.performSegue(withIdentifier: "homeScreenSegueIdentifier", sender: nil)
+        self.initializeTextFields()
     }
 
     @IBAction func logInButtonPressed(_ sender: Any) {
@@ -158,7 +177,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField.textColor == UIColor.lightGray{
             textField.text = nil
-            textField.textColor = UIColor.black
+            textField.textColor = .label
         }
     }
     

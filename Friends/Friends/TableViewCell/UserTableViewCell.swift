@@ -12,24 +12,26 @@ class UserTableViewCell: UITableViewCell {
     @IBOutlet weak var avatar: UIImageView!
     @IBOutlet weak var name: UILabel!
     @IBOutlet weak var username: UILabel!
+    var downloaded:Bool = true
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        self.makeRounded()
+//        self.makeRounded()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
+//        self.performSegue(withIdentifier: "ProfileSegue", sender: nil)
     }
     
-    func makeRounded() {
-        avatar.layer.borderWidth = 1
-        avatar.layer.masksToBounds = false
-        avatar.layer.borderColor = UIColor.black.cgColor
-        avatar.layer.cornerRadius = avatar.frame.height/2
-        avatar.clipsToBounds = true
-    }
-    
+//    func makeRounded() {
+//        avatar.layer.borderWidth = 1
+//        avatar.layer.masksToBounds = false
+//        avatar.layer.borderColor = UIColor.black.cgColor
+//        avatar.layer.cornerRadius = avatar.frame.height/2
+//        avatar.clipsToBounds = true
+//    }
+//    
 }

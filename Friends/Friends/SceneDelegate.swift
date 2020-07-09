@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import CoreData
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    var userID:String = ""
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -25,18 +27,29 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This occurs shortly after the scene enters the background, or when its session is discarded.
         // Release any resources associated with this scene that can be re-created the next time the scene connects.
         // The scene may re-connect later, as its session was not neccessarily discarded (see `application:didDiscardSceneSessions` instead).
+//        do{
+//            try Auth.auth().signOut()
+//        } catch let error {
+//            print(error)
+//        }
     }
 
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
-        hidePrivacyProtectionWindow()
+        let screenSecurity = retrieveScreenSecurity()
+        if screenSecurity{
+            hidePrivacyProtectionWindow()
+        }
     }
 
     func sceneWillResignActive(_ scene: UIScene) {
         // Called when the scene will move from an active state to an inactive state.
         // This may occur due to temporary interruptions (ex. an incoming phone call).
-        showPrivacyProtectionWindow()
+        let screenSecurity = retrieveScreenSecurity()
+        if screenSecurity{
+            showPrivacyProtectionWindow()
+        }
     }
 
     func sceneWillEnterForeground(_ scene: UIScene) {
@@ -69,6 +82,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private func hidePrivacyProtectionWindow() {
         privacyProtectionWindow?.isHidden = true
         privacyProtectionWindow = nil
+    }
+    
+    
+    func retrieveScreenSecurity() -> Bool {
+        userID = (Auth.auth().currentUser?.uid) ?? ""
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate // gives a pointer to the class app delegate
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        var fetchedResults: [NSManagedObject]? = nil
+        let predicate = NSPredicate(format: "uid MATCHES '\(userID)'")
+        request.predicate = predicate
+        
+        do{
+            try fetchedResults = context.fetch(request) as? [NSManagedObject]
+        } catch{
+            // error occurs
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        print("the user id is : ->>>\(userID)")
+        if fetchedResults!.count >= 1{
+            return fetchedResults![0].value(forKey: "screensecurity") as! Bool
+        } else{
+            return true
+        }
+        
     }
 
 

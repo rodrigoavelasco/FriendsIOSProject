@@ -14,14 +14,15 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     let darkModeSwitch = UISwitch(frame: CGRect(x: 1, y: 1, width: 20, height: 20))
     let locationServicesSwitch = UISwitch(frame: CGRect(x: 1, y: 1, width: 20, height: 20))
     let enableScreenSecuritySwitch = UISwitch(frame: CGRect(x: 1, y: 1, width: 20, height: 20))
+    let enableBiometricLoginSwitch = UISwitch(frame: CGRect(x: 1, y: 1, width: 20, height: 20))
     var darkMode = false
     var screenSecurity = false
-    let userEmail:String = (Auth.auth().currentUser?.email)!
+    let userID:String = (Auth.auth().currentUser?.uid)!
     var tabBarDelegate: UITabBarControllerDelegate?
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 3
+            return 4
         } else if section == 1 {
             return 2
         } else if section == 2 {
@@ -39,7 +40,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            if indexPath.row == 0 || indexPath.row == 2 {
+            if indexPath.row == 0 || indexPath.row == 2 || indexPath.row == 3 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchSettings", for: indexPath as IndexPath)
                 if indexPath.row == 0 {
                     cell.textLabel!.text = "Location Services"
@@ -49,6 +50,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.textLabel!.text = "Enable Screen Security"
                     enableScreenSecuritySwitch.addTarget(self, action: #selector(toggleScreenSecurity(_:)), for: .valueChanged)
                     cell.accessoryView = enableScreenSecuritySwitch
+                } else if indexPath.row == 3{
+                    cell.textLabel!.text = "Enable Automatic Biometric Log In"
+                    enableScreenSecuritySwitch.addTarget(self, action: #selector(toggleAutomaticBiometricLogin(_:)), for: .valueChanged)
+                    cell.accessoryView = enableBiometricLoginSwitch
                 } else {
                     cell.textLabel!.text = "This shouldn't appear!"
                 }
@@ -131,18 +136,23 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func toggleScreenSecurity(_ sender: UISwitch){
-        if sender.isOn{
-            print("toggleScreenSecurity")
-            screenSecurity = true
-        }
+        toggleSwitches(toggleStatus: sender.isOn, settingKey: "screensecurity")
+    }
+    
+    @IBAction func toggleAutomaticBiometricLogin(_ sender: UISwitch){
+        toggleSwitches(toggleStatus: sender.isOn, settingKey: "biometriclogin")
     }
     
     @IBAction func toggleDarkMode(_ sender: UISwitch){
+        toggleSwitches(toggleStatus: sender.isOn, settingKey: "darkmode")
+    }
+    
+    func toggleSwitches(toggleStatus: Bool, settingKey: String){
         let appDelegate = UIApplication.shared.delegate as! AppDelegate // gives a pointer to the class app delegate
         let context = appDelegate.persistentContainer.viewContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
         var fetchedResults: [NSManagedObject]? = nil
-        let predicate = NSPredicate(format: "email MATCHES '\(userEmail)'")
+        let predicate = NSPredicate(format: "uid MATCHES '\(userID)'")
         request.predicate = predicate
         
         do{
@@ -154,11 +164,10 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             abort()
         }
         let settings = fetchedResults![0]
-        if sender.isOn {
-
-            //NSEntityDescription.insertNewObject(forEntityName: "Settings", into: context)
-            settings.setValue(userEmail, forKey: "email")
-            settings.setValue(true, forKey: "darkmode")
+        
+        if toggleStatus{
+            
+            settings.setValue(true, forKey: settingKey)
             
             // Commit changes
             do {
@@ -169,12 +178,14 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
                 abort()
             }
-            darkMode = true
-            overrideUserInterfaceStyle = .dark
-        } else if !sender.isOn{
-
-            settings.setValue(userEmail, forKey: "email")
-            settings.setValue(false, forKey: "darkmode")
+            
+            if settingKey == "darkmode"{
+                darkMode = true
+                overrideUserInterfaceStyle = .dark
+            }
+            
+        } else if !toggleStatus{
+            settings.setValue(false, forKey: settingKey)
             
             // Commit changes
             do {
@@ -185,8 +196,11 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
                 abort()
             }
-            darkMode = false
-            overrideUserInterfaceStyle = .light
+            
+            if settingKey == "darkmode"{
+                  darkMode = false
+                  overrideUserInterfaceStyle = .light
+            }
         }
     }
     
@@ -201,7 +215,60 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         loadUserSettings()
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        let section = indexPath.section
+        let cell = indexPath.row
+        switch section {
+        case 0:
+            if cell == 1{
+                print("blocked friends section")
+            }
+        case 1:
+            if cell == 0{
+                print("change username")
+            } else if cell == 1{
+                print("change password")
+            }
+        case 2:
+            if cell == 0{
+                print("notification sounds")
+            }
+        case 4:
+            logOut()
+        case 5:
+            deleteAccount()
+        default:
+            print("shouldn't be here")
+        }
+    }
+    
+    func logOut(){
+        do{
+            try Auth.auth().signOut()
+        } catch let error {
+            print(error)
+        }
+        performSegue(withIdentifier: "loginScreenSegueIdentifier", sender: nil)
+    }
+    
+    func deleteAccount(){
+        let user = Auth.auth().currentUser
+        let deleteAlert = UIAlertController(title: "Delete Account?", message: "Do you wish to delete your account?", preferredStyle: UIAlertController.Style.alert)
+        deleteAlert.addAction(UIAlertAction(title: "Yes", style: .cancel, handler: { action in
+            let secondAlert = UIAlertController(title: "Deleting Account", message: "Are You Sure There's no going back?", preferredStyle: UIAlertController.Style.alert)
+            secondAlert.addAction(UIAlertAction(title: "Yes!!", style: .cancel, handler: { action in
+                user?.delete(completion: nil)
+                self.performSegue(withIdentifier: "loginScreenSegueIdentifier", sender: nil)
+            }))
+            self.present(secondAlert, animated: true, completion: nil)
+            secondAlert.addAction(UIAlertAction(title: "No", style: .destructive, handler: nil))
+
+        }))
+        deleteAlert.addAction(UIAlertAction(title: "No", style: .destructive, handler: nil))
+        
+        present(deleteAlert, animated: true, completion: nil)
+
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -231,7 +298,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         let context = appDelegate.persistentContainer.viewContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
         var fetchedResults: [NSManagedObject]? = nil
-        let predicate = NSPredicate(format: "email MATCHES '\(userEmail)'")
+        let predicate = NSPredicate(format: "uid MATCHES '\(userID)'")
         request.predicate = predicate
         
         do{
@@ -242,12 +309,25 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
             abort()
         }
-        darkMode = (fetchedResults![0].value(forKey: "darkmode")) as! Bool
-        if darkMode {
-            darkModeSwitch.isOn = true
-        } else {
-            darkModeSwitch.isOn = false
-        }
+        darkMode = fetchedResults![0].value(forKey: "darkmode") as! Bool
+        screenSecurity = fetchedResults![0].value(forKey: "screensecurity") as! Bool
+        
+//        fetchedResults![0].setValue(false, forKey: "biometriclogin")
+//        // Commit changes
+//        do {
+//            try context.save()
+//        } catch {
+//            // error occurs
+//            let nserror = error as NSError
+//            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+//            abort()
+//        }
+        
+        let biometricLogin = fetchedResults![0].value(forKey: "biometriclogin") as! Bool
+        darkModeSwitch.isOn = darkMode
+        enableScreenSecuritySwitch.isOn = screenSecurity
+        enableBiometricLoginSwitch.isOn = biometricLogin
+        
     }
     
     func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {

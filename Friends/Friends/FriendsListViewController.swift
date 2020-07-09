@@ -8,9 +8,11 @@
 
 import UIKit
 
-class FriendsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class FriendsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource{
+    
     @IBOutlet weak var tableView: UITableView!
-    let data = ["name", "username"]
+    let olddata = ["name", "username"]
+    var list:[[String]] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,29 +22,23 @@ class FriendsListViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count
+        return olddata.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FriendsTableCell", for: indexPath as IndexPath)
             as! UserTableViewCell
-        cell.name.text = data[0]
-        cell.username.text = data[1]
+        let row = indexPath.row
+        if list.count != 0 {
+            let data = list[row]
+            cell.name.text = data[0]
+            cell.username.text = data[1]
+//            cell.imageView?.image = data[2]
+        }
         return cell
     }
-
-    @IBAction func addFriendsButtonPressed(_ sender: Any) {
-        // this should be a segue to another controller
-    }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func fetchFriends() {
+        
     }
-    */
-
 }
