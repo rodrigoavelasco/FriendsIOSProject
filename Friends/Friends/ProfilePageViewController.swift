@@ -15,12 +15,21 @@ import FirebaseStorage
 import AVFoundation
 import Foundation
 
-class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {
+class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching, UpdateHeight {
+    func updateStringHeight(indexPath: IndexPath, height: CGFloat) {
+        cellStringHeights[indexPath]! = height
+    }
+    
+    func updateHeight(indexPath: IndexPath, height: CGFloat) {
+        cellHeights[indexPath]! = height
+//        tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
+    }
+    
     
     
     func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
-        if (posts != nil) {
-            if indexPaths.first!.row >= posts.count + 2 {
+        if (!posts.isEmpty) {
+            if indexPaths.first!.row >= posts.count {
                 loadNextBatch()
             }
         }
@@ -31,7 +40,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var result = 4
-        if posts != nil {
+        if !posts.isEmpty {
             result += posts.count
         }
         return result
@@ -70,8 +79,10 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                     if map["image"] != nil {
                         cell.userImage!.load(url: URL(string: (map["image"] as? String)!)!)
                     } else {
-                        cell.imageSetView!.isHidden = false
-                        cell.imageTapToSet!.isHidden = false
+                        if self.me {
+                            cell.imageSetView!.isHidden = false
+                            cell.imageTapToSet!.isHidden = false
+                        }
                         cell.userImage!.image = UIImage(named: "blank-profile-picture")
                     }
                 } else {
@@ -113,6 +124,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             
             cell.rowID = indexPath.row
             cell.layoutIfNeeded()
+            cell.indexPath = indexPath
             return cell
         }
         
@@ -120,6 +132,9 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.row <= 3 {
+            return UITableView.automaticDimension
+        }
 //        if indexPath.row == 0 {
 //            return 210
 //        } else if indexPath.row == 1 {
@@ -143,8 +158,24 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
 //            return 200
 //        }
         
-        return UITableView.automaticDimension
+        if cellHeights[indexPath] == nil {
+            cellHeights[indexPath] = 0
+        }
+        if cellStringHeights[indexPath] == nil{
+            cellHeights[indexPath] = 0
+        }
         
+        return cellHeights[indexPath]! + cellStringHeights[indexPath]! + 80
+
+        
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        cellHeights[indexPath] = cell.frame.size.height
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return cellHeights[indexPath] ?? UITableView.automaticDimension
     }
     
 //    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
@@ -233,6 +264,10 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     var imageString: String!
     var userName: String!
     
+    var me: Bool = true
+    
+    var cellHeights = [IndexPath: CGFloat]()
+    var cellStringHeights = [IndexPath: CGFloat]()
     
     @IBOutlet var blockButton: UIBarButtonItem!
     @IBOutlet var addButton: UIBarButtonItem!
@@ -249,9 +284,11 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
         tableView.prefetchDataSource = self
         
         if Auth.auth().currentUser!.uid != uid! {
+            me = false
             let userDocumentRef = db.collection("users").document(uid!)
             userDocumentRef.getDocument{ (document, error) in
                 if let document = document, document.exists {
+                    
                     let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
                     print("Document data: \(dataDescription)")
                     let map = document.data()!
@@ -351,7 +388,13 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
         // Pass the selected object to the new view controller.
     }
     */
-    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier! == "Show Comments" {
+            let commentsVC = segue.destination as! CommentsTableViewController
+            commentsVC.postID = postIDSender!
+        }
+    }
+    var postIDSender: String!
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }

@@ -11,10 +11,125 @@ import Firebase
 import CoreData
 import FirebaseFirestore
 import FirebaseFirestoreSwift
+import Foundation
 
-class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+protocol UpdateHeight {
+    func updateHeight(indexPath: IndexPath, height: CGFloat)
+    
+    func updateStringHeight(indexPath: IndexPath, height: CGFloat)
+}
+
+class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching, UpdateHeight{
+    func updateStringHeight(indexPath: IndexPath, height: CGFloat) {
+        cellStringHeights[indexPath]! = height
+    }
+    
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        
+        
+        if (!posts.isEmpty) {
+            if posts.count % 10 == 0 {
+                if indexPaths.first!.row >= posts.count {
+                    print("****** loading next batch) ******* \(posts.count)")
+                    loadNextBatch()
+                }
+            }
+        }
+    }
+    
+//    func tableView(_tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        print("****** loading next batch) ******* \(indexPath.row)")
+//        if (!posts.isEmpty) {
+//            if indexPath.row >= posts.count {
+//                loadNextBatch()
+//            }
+//        }
+//    }
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if let lastVisibleIndexPath = tableView.indexPathsForVisibleRows?.last {
+            if indexPath == lastVisibleIndexPath {
+                // do here...
+                loaded = true
+            }
+        }
+        cellHeights[indexPath] = cell.frame.size.height
+
+    }
+    
+    func loadNextBatch() {
+        
+        print("****** loading next batch) ******* \(compoundPostsCount)")
+//        reload = false
+        
+//        print(self.compoundPosts)
+        var itemExists: Bool = true
+        let currentCount = self.posts.count + 10
+        var count: Int = 0
+        if (self.compoundPosts.count >= 1) {
+            while self.compoundPosts[count].count == 0 && count < self.compoundPosts.count{
+                count += 1
+                
+            }
+            if count == self.compoundPosts.count {
+                return
+            }
+            if self.compoundPosts[count].count > 10 {
+                while self.posts.count < currentCount {
+                    self.posts.append(self.compoundPosts[count].popLast()!)
+                }
+                self.tableView.reloadData()
+                return
+            } else {
+                while self.posts.count < currentCount {
+                    if count == self.compoundPosts.count {
+                        return
+                    } else if self.compoundPosts[count].count == 0 {
+                        count += 1
+                    } else {
+                        self.posts.append(self.compoundPosts[count].popLast()!)
+                    }
+                }
+                self.tableView.reloadData()
+                return
+            }
+//            while self.posts.count < currentCount && itemExists {
+//                 for i in 0 ..< self.compoundPosts.count {
+//                    if i == self.compoundPosts.count && self.compoundPosts[i].count == 0 {
+//                        itemExists = false
+//                        break
+//                    } else {
+//                        while self.compoundPosts[i].count != 0 &&
+//                            self.posts.count < currentCount {
+//                            let pop = self.compoundPosts[i].popLast()
+//                            if pop != nil {
+//                                self.posts.append(pop!)
+//                            } else {
+//                                break
+//                            }
+//                        }
+//                        compoundPostsCount += 1
+//                    }
+//                }
+//            }
+        }
+        
+//        print(self.posts)
+//        print(self.compoundPosts)
+        print(self.posts.count)
+//        self.tableView.reloadData()
+//        loaded = true
+    }
+
+    
+    func updateHeight(indexPath: IndexPath, height: CGFloat) {
+        cellHeights[indexPath]! = height
+//        tableView.reloadRows(at: [indexPath], with: UITableView.RowAnimation.none)
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-            return 10
+        return 2 + posts.count
+//            return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -45,19 +160,67 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             let cell = tableView.dequeueReusableCell(withIdentifier: "HomeFeed", for: indexPath as IndexPath)
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "Post", for: indexPath as IndexPath)
+//            if indexPath.row == self.posts.count {
+//                let queue = DispatchQueue(label: "aoeu", qos: .userInitiated)
+//                queue.async {
+//                    self.loadNextBatch()
+//                    sleep(3)
+//                    DispatchQueue.main.async{self.tableView.reloadData()
+////                        print("******** \(self.posts.count)")
+//                    }
+//                }
+//
+//
+//            }
+            let cell = tableView.dequeueReusableCell(withIdentifier: "Post", for: indexPath as IndexPath) as! PostTableViewCell
+            
+            if globalDark {
+                cell.likeButton!.imageView!.image = UIImage(named: "heart-unselected-dark")
+            } else {
+                cell.likeButton!.imageView!.image = UIImage(named: "heart-unselected")
+            }
+            
+            let postNumber = indexPath.row - 2
+            cell.addPost(postID: posts[postNumber])
+            cell.rowID = indexPath.row
+            cell.homeVC = self
+            cell.indexPath = indexPath
+            cell.updateHeight = self
+            cell.layoutIfNeeded()
             return cell
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.row == 0 {
-            return 80
-        } else if indexPath.row == 1 {
-            return 50
-        } else {
-            return 135
+        if indexPath.row <= 1 {
+            return UITableView.automaticDimension
         }
+//        if cellHeights[indexPath] == nil {
+//            cellHeights[indexPath] = 0
+//        }
+//
+//        if cellStringHeights[indexPath] == nil {
+//            cellStringHeights[indexPath] = 0
+//        }
+        
+//        return cellHeights[indexPath]! + cellStringHeights[indexPath]! + 80
+        return UITableView.automaticDimension
+//        if indexPath.row == 0 {
+//            return 80
+//        } else if indexPath.row == 1 {
+//            return 50
+//        } else {
+//            return 135
+//        }
+    }
+    var cellHeights = [IndexPath: CGFloat]()
+    var cellStringHeights = [IndexPath: CGFloat]()
+
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//            }
+
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return cellHeights[indexPath] ?? UITableView.automaticDimension
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -82,6 +245,12 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     
     var friends: [String] = []
     var posts: [String] = []
+    var compoundPosts: [[String]] = []
+    var dates: [Date] = []
+    
+    var compoundPostsCount: Int = 0
+    
+    var loaded: Bool = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -90,6 +259,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.prefetchDataSource = self
         uid = Auth.auth().currentUser!.uid
         user = User(uid: Auth.auth().currentUser!.uid)
         SettingsViewController().loadUserSettings()
@@ -102,9 +272,85 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 if map["friends"] != nil {
                     self.friends = map["friends"] as! [String]
                 }
-                if map["posts"] != nil {
-                    self.posts = map["posts"] as! [String]
+                self.friends.append(self.uid!)
+//                if map["posts"] != nil {
+//                    self.posts = map["posts"] as! [String]
+//
+                let postsRef = self.db.collection("posts")
+                postsRef.whereField("uid", in: self.friends).getDocuments() { (querySnapshot, err) in
+                    if let err = err {
+                        print ("Error getting documents: \(err)")
+                    } else {
+                        for document in (querySnapshot?.documents)! {
+                            let data = document.data()
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "MMMM d, yyyy"
+                            let dateString = data["date"] as? String
+                            let date = dateFormatter.date(from: dateString!)!
+                            if (!self.dates.contains(date)) {
+                                self.dates.append(date)
+                            }
+                        }
+                        self.dates = self.dates.sorted(by: { $0.compare($1) == .orderedDescending })
+//                        print(self.dates)
+                        self.compoundPosts = Array(repeating: [], count: self.dates.count)
+                        for document in (querySnapshot?.documents)! {
+                            let data = document.data()
+                            let dateFormatter = DateFormatter()
+                            dateFormatter.dateFormat = "MMMM d, yyyy"
+                            let dateString = data["date"] as? String
+                            let date = dateFormatter.date(from: dateString!)!
+                            let index = self.dates.lastIndex(of: date)!
+                            self.compoundPosts[index].append(document.documentID)
+                        }
+                        print(self.compoundPosts)
+                        for i in 0..<self.compoundPosts.count {
+                            self.compoundPosts[i] =     self.compoundPosts[i].shuffled()
+                        }
+                        print(self.compoundPosts)
+                        var itemExists: Bool = true
+                        while self.posts.count < 10 && itemExists {
+                            if (self.compoundPostsCount < self.compoundPosts.count && !self.compoundPosts[self.compoundPostsCount].isEmpty) {
+                                for i in 0 ..< self.compoundPosts.count {
+
+                                    if i == self.compoundPosts.count && self.compoundPosts[i].count == 0 {
+                                        itemExists = false
+                                    } else {
+                                        while self.compoundPosts[i].count != 0 && self.posts.count < 10 {
+
+                                            let pop = self.compoundPosts[i].popLast()
+                                            if pop != nil {
+                                                self.posts.append(pop!)
+                                            } else {
+                                                break
+                                            }
+                                        }
+                                        self.compoundPostsCount += 1
+                                    }
+                                }
+                            }
+                            else {
+                                break
+                            }
+                        }
+                        print(self.posts)
+                        print(self.compoundPosts)
+                        self.tableView.reloadData()
+                    }
                 }
+//                for friend in self.friends {
+//                    postsRef.whereField("posts", isEqualTo: friend).getDocuments() { (querySnapshot, err) in
+//                        if let err = err {
+//                            print ("Error getting documents: \(err)")
+//                        } else {
+//                            for document in querySnapshot!.documents {
+//                                print("\(document.documentID) => \(document.data())")
+//
+//                            }
+//                        }
+//                    }
+//                }
+                                
             }
         }
         
@@ -143,5 +389,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
             }
         }
+        if segue.identifier! == "Show Comments" {
+            let commentsVC = segue.destination as! CommentsTableViewController
+            commentsVC.postID = postIDSender
+        }
     }
+    var postIDSender: String!
 }
