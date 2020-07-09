@@ -45,13 +45,14 @@ class TabBarViewController: UITabBarController {
             abort()
         }
         if fetchedResults!.count >= 1 {
-            return (fetchedResults![0].value(forKey: "darkmode") != nil)
+            return fetchedResults![0].value(forKey: "darkmode") as! Bool
         } else {
             let user = NSEntityDescription.insertNewObject(forEntityName: "Settings", into: context)
             user.setValue(userEmail, forKey: "email")
             user.setValue(useruid, forKey: "uid")
             user.setValue(false, forKey: "darkmode")
             user.setValue(true, forKey: "screensecurity")
+            user.setValue(false, forKey: "biometriclogin")
             
             do {
                 try context.save()
