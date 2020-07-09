@@ -22,7 +22,6 @@ class PrivacyProtectionViewController: UITableViewController {
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
 
-        // In my opinion, it looks a bit better to position the label centred in the top two thirds of the screen rather than in the middle
         let labelHeight = view.bounds.height * 0.66
         (privacyLabel.frame, _) = view.bounds.divided(atDistance: labelHeight, from: .minYEdge)
     }
