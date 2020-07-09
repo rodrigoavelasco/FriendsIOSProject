@@ -52,7 +52,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.accessoryView = enableScreenSecuritySwitch
                 } else if indexPath.row == 3{
                     cell.textLabel!.text = "Enable Automatic Biometric Log In"
-                    enableScreenSecuritySwitch.addTarget(self, action: #selector(toggleAutomaticBiometricLogin(_:)), for: .valueChanged)
+                    enableBiometricLoginSwitch.addTarget(self, action: #selector(toggleAutomaticBiometricLogin(_:)), for: .valueChanged)
                     cell.accessoryView = enableBiometricLoginSwitch
                 } else {
                     cell.textLabel!.text = "This shouldn't appear!"
@@ -140,6 +140,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     @IBAction func toggleAutomaticBiometricLogin(_ sender: UISwitch){
+        print("toggle Biometric login ON or OFF")
         toggleSwitches(toggleStatus: sender.isOn, settingKey: "biometriclogin")
     }
     
