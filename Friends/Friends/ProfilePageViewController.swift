@@ -15,7 +15,20 @@ import FirebaseStorage
 import AVFoundation
 import Foundation
 
-class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITableViewDataSourcePrefetching {
+    
+    
+    func tableView(_ tableView: UITableView, prefetchRowsAt indexPaths: [IndexPath]) {
+        if (posts != nil) {
+            if indexPaths.first!.row >= posts!.count + 2 {
+                loadNextBatch()
+            }
+        }
+        
+    }
+    
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var result = 4
         if posts != nil {
@@ -79,6 +92,9 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             let cell = tableView.dequeueReusableCell(withIdentifier: "PastPostsLabel", for: indexPath as IndexPath)
             return cell
         } else if indexPath.row >= 4 {
+//            if indexPath.row == 4 + posts.count - 1 && reload {
+//                loadNextBatch()
+//            }
             let cell = tableView.dequeueReusableCell(withIdentifier: "Post", for: indexPath as IndexPath) as! PostTableViewCell
             
             cell.uid = uid!
@@ -90,7 +106,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
             let postNumber = indexPath.row - 4
             cell.addPost(postID: posts[posts.count - 1 - postNumber])
             
-
+            cell.rowID = indexPath.row
             return cell
         }
         
@@ -125,6 +141,60 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if let lastVisibleIndexPath = tableView.indexPathsForVisibleRows?.last {
+//            if indexPath == lastVisibleIndexPath && reload! {
+//                loadNextBatch()
+//            }
+//        }
+//    }
+    
+    
+    private func calculateIndexPathsToRelad(from newPosts: [String]) -> [IndexPath] {
+        let startIndex = posts.count - newPosts.count
+        let endIndex = startIndex + newPosts.count
+        return (startIndex..<endIndex).map { IndexPath(row: $0, section: 0)}
+    }
+    
+    func loadNextBatch() {
+        print("loading next batch)")
+//        reload = false
+        let userDocumentRef = db.collection("users").document(uid!)
+        
+        userDocumentRef.getDocument{ (document, error) in
+            if let document = document, document.exists {
+                let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
+                print("Document data: \(dataDescription)")
+                let map = document.data()!
+                if map["posts"] != nil {
+                    
+                    let allPosts = map["posts"] as! [String]
+                    if allPosts.count <= 5 {
+                        self.posts = allPosts
+//                        self.reload = false
+                    } else {
+                        let amount = self.posts!.count + 5
+                        if allPosts.count > amount {
+                            let slice: ArraySlice<String> = allPosts[allPosts.count - amount ... allPosts.count - 1]
+                            self.posts = Array<String>() + slice
+//                            self.reload = true
+                        } else {
+                            self.posts = Array<String>() + allPosts
+//                            self.reload = false
+                        }
+                        self.tableView.reloadData()
+                    }
+                } else {
+                    print("empty posts")
+                }
+               
+            } else {
+                print("Document does not exist")
+            }
+        }
+
+    }
+    
 
     @IBOutlet var tableView: UITableView!
     var uid: String!
@@ -132,7 +202,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     let storage = Storage.storage()
     var posts: [String]!
     var friends: [String]!
-    
+//    var reload: Bool!
     var imageString: String!
     var userName: String!
     
@@ -142,10 +212,11 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+//        reload = false
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.prefetchDataSource = self
         if Auth.auth().currentUser!.uid != uid {
             let userDocumentRef = db.collection("users").document(uid!)
             userDocumentRef.getDocument{ (document, error) in
@@ -183,6 +254,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                     } else {
                         let slice: ArraySlice<String> = allPosts[allPosts.count - 6 ... allPosts.count - 1]
                         self.posts = Array<String>() + slice
+//                        self.reload = true
                     }
                     self.tableView.reloadData()
                 } else {
@@ -237,5 +309,11 @@ extension UIImageView {
                 }
             }
         }
+    }
+}
+
+extension ProfilePageViewController {
+    func isLoadingcell(for indexPath: IndexPath) -> Bool {
+        return indexPath.row >= posts.count + 4
     }
 }
