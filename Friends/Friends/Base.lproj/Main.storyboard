@@ -1531,6 +1531,9 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="1Hd-bP-7NW" kind="show" identifier="ProfileSegue1" id="wyE-EY-4rs"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -1548,7 +1551,7 @@
                         <barButtonItem key="leftBarButtonItem" title="Edit" id="wH2-m4-rWN"/>
                         <barButtonItem key="rightBarButtonItem" title="Add" id="A1w-Az-JgR">
                             <connections>
-                                <segue destination="fBb-Zc-CVH" kind="show" id="KIT-vg-iUE"/>
+                                <segue destination="fBb-Zc-CVH" kind="show" identifier="AddFriendSegue" id="KIT-vg-iUE"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -1619,8 +1622,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="axF-yL-D6V"/>
-        <segue reference="LYw-Wt-wIe"/>
+        <segue reference="faR-cN-uY3"/>
+        <segue reference="wyE-EY-4rs"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="Home" width="21" height="23"/>

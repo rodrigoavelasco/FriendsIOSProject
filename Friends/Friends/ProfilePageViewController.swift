@@ -253,11 +253,15 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
         
     }
     @IBAction func deleteButtonPressed(_ sender: Any) {
+        let grandparentVC = delegate as! FriendReloader
+        grandparentVC.reloadTable()
         print("delete button pressed")
         db.collection("users").document(Auth.auth().currentUser!.uid).updateData(["friends": FieldValue.arrayRemove([uid!])])
         self.navigationItem.setRightBarButtonItems([self.addButton, self.blockButton], animated: false)
     }
     @IBAction func addButtonPressed(_ sender: Any) {
+        let grandparentVC = delegate as! FriendReloader
+               grandparentVC.reloadTable()
         print("add button pressed")
         db.collection("users").document(Auth.auth().currentUser!.uid).updateData(["friends": FieldValue.arrayUnion([uid!])])
         self.navigationItem.setRightBarButtonItems([self.deleteButton, self.blockButton], animated: false)
