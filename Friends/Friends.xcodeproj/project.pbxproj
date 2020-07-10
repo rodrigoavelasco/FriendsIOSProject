@@ -16,6 +16,7 @@
 		49369F4B24AEAA2000396ABD /* ProfilePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49369F4A24AEAA2000396ABD /* ProfilePageViewController.swift */; };
 		49369F4D24AEBB1F00396ABD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 49369F4C24AEBB1E00396ABD /* Assets.xcassets */; };
 		49382F6D24B7D5B800EA597E /* CommentButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49382F6C24B7D5B800EA597E /* CommentButton.swift */; };
+		49382F6F24B8073300EA597E /* BlockedFriendsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49382F6E24B8073300EA597E /* BlockedFriendsTableViewController.swift */; };
 		493FD47B24ABE909007DF669 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FD47A24ABE909007DF669 /* HomeViewController.swift */; };
 		493FD47D24ABEA67007DF669 /* HomeUserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493FD47C24ABEA67007DF669 /* HomeUserTableViewCell.swift */; };
 		4942262624B516C50097C133 /* NewPostTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4942262524B516C50097C133 /* NewPostTableViewController.swift */; };
@@ -53,6 +54,7 @@
 		49369F4A24AEAA2000396ABD /* ProfilePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePageViewController.swift; sourceTree = "<group>"; };
 		49369F4C24AEBB1E00396ABD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		49382F6C24B7D5B800EA597E /* CommentButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentButton.swift; sourceTree = "<group>"; };
+		49382F6E24B8073300EA597E /* BlockedFriendsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockedFriendsTableViewController.swift; sourceTree = "<group>"; };
 		493FD47A24ABE909007DF669 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		493FD47C24ABEA67007DF669 /* HomeUserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeUserTableViewCell.swift; sourceTree = "<group>"; };
 		4942262524B516C50097C133 /* NewPostTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewPostTableViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +148,7 @@
 				87A2834924A81E0F005D5725 /* SceneDelegate.swift */,
 				87A2834B24A81E0F005D5725 /* ViewController.swift */,
 				87A2834D24A81E0F005D5725 /* Main.storyboard */,
+				49382F6E24B8073300EA597E /* BlockedFriendsTableViewController.swift */,
 				87FCF55224B7F294007AE2F3 /* ChangePasswordViewController.swift */,
 				49382F6C24B7D5B800EA597E /* CommentButton.swift */,
 				4942262724B5188C0097C133 /* NewPostTableViewCell.swift */,
@@ -318,6 +321,7 @@
 				4935AFE824AC3EE4007C4DCC /* SettingsViewController.swift in Sources */,
 				49382F6D24B7D5B800EA597E /* CommentButton.swift in Sources */,
 				49DE369E24B2A08600630AFE /* NewPostViewController.swift in Sources */,
+				49382F6F24B8073300EA597E /* BlockedFriendsTableViewController.swift in Sources */,
 				4942262624B516C50097C133 /* NewPostTableViewController.swift in Sources */,
 				49DE36A024B2A34700630AFE /* CommentsTableViewController.swift in Sources */,
 				49DE36A224B2A51800630AFE /* User.swift in Sources */,
