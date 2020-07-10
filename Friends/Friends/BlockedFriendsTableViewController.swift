@@ -41,7 +41,22 @@ class BlockedFriendsTableViewController: UITableViewController {
     }
 
     // MARK: - Table view data source
-
+//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return UITableView.automaticDimension
+//    }
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {db.collection("users").document(Auth.auth().currentUser!.uid).updateData(["blocked": FieldValue.arrayRemove([blockedFriends[indexPath.row]])]) { err in
+            if (err != nil) {
+                print (err)
+            }
+            }
+            blockedFriends.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .fade)
+            
+        } else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+        }
+    }
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
@@ -59,7 +74,13 @@ class BlockedFriendsTableViewController: UITableViewController {
         docRef.getDocument() { (document, error) in
             if let document = document, document.exists {
                 let map = document.data()!
-                cell.avatar.load(url: URL(string: map["image"] as! String)!)
+                if map["image"] != nil {
+                    cell.avatar.load(url: URL(string: map["image"] as! String)!)
+                }
+                else {
+                    cell.avatar!.image = UIImage(named:"blank-profile-picture")
+                }
+                
                 cell.name!.text = map["name"] as! String
                 cell.username!.text = map["username"] as! String
             }

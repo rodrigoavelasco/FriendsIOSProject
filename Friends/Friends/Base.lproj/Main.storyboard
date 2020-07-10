@@ -1383,20 +1383,20 @@
             </objects>
             <point key="canvasLocation" x="2579.7101449275365" y="787.5"/>
         </scene>
-        <!--Blocked Friends Table View Controller-->
+        <!--Blocked Friends-->
         <scene sceneID="ZUW-UX-nLV">
             <objects>
                 <tableViewController id="9zV-3D-tOg" customClass="BlockedFriendsTableViewController" customModule="Friends" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="AAW-uP-TOB">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" id="AAW-uP-TOB">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="BlockedFriendsTableCell" id="p9G-YZ-gcF">
-                                <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="BlockedFriendsTableCell" rowHeight="60" id="p9G-YZ-gcF">
+                                <rect key="frame" x="0.0" y="28" width="414" height="60"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="p9G-YZ-gcF" id="Dwt-D4-aBp">
-                                    <rect key="frame" x="0.0" y="0.0" width="414" height="43.666667938232422"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -1406,7 +1406,7 @@
                             <outlet property="delegate" destination="9zV-3D-tOg" id="BRa-Mq-xLQ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" id="yhl-rB-Bbw"/>
+                    <navigationItem key="navigationItem" title="Blocked Friends" id="yhl-rB-Bbw"/>
                     <connections>
                         <outlet property="tableView" destination="AAW-uP-TOB" id="h9v-xu-pWm"/>
                     </connections>
