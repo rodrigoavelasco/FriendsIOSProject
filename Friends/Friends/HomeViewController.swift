@@ -29,12 +29,18 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         
         if (!posts.isEmpty) {
-                if indexPaths.first!.row >= posts.count {
+                if indexPaths.first!.row >= posts.count - 1 {
                     print("****** loading next batch) ******* \(posts.count)")
                     loadNextBatch()
                 }
         }
     }
+    
+    func resetPostZero() {
+        newPost = true
+    }
+    
+    var newPost: Bool = false
     
 //    func tableView(_tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
 //        print("****** loading next batch) ******* \(indexPath.row)")
@@ -61,56 +67,90 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
 //        reload = false
         
 //        print(self.compoundPosts)
-        var itemExists: Bool = true
-        let currentCount = self.posts.count + 10
-        var count: Int = 0
-        if (self.compoundPosts.count >= 1) {
-            while self.compoundPosts[count].count == 0 && count < self.compoundPosts.count{
-                count += 1
-                
-            }
-            if count == self.compoundPosts.count {
-                return
-            }
-            if self.compoundPosts[count].count > 10 {
-                while self.posts.count < currentCount {
-                    self.posts.append(self.compoundPosts[count].popLast()!)
-                }
-                self.tableView.reloadData()
-                return
+//
+        self.dates = []
+        self.compoundPosts = []
+        let postsRef = self.db.collection("posts")
+        postsRef.whereField("uid", in: self.friends).getDocuments() { (querySnapshot, err) in
+            if let err = err {
+                print ("Error getting documents: \(err)")
             } else {
-                while self.posts.count < currentCount {
+                for document in (querySnapshot?.documents)! {
+                    let data = document.data()
+                    let tempPosts: [String] = []
+                    let postID = document.documentID
+                    if (!self.posts.contains(postID)) {
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "MMMM d, yyyy"
+                        let dateString = data["date"] as? String
+                        let date = dateFormatter.date(from: dateString!)!
+                        if (!self.dates.contains(date)) {
+                            self.dates.append(date)
+                        }
+                    }
+                    
+                }
+                self.dates = self.dates.sorted(by: { $0.compare($1) == .orderedDescending })
+//                        print(self.dates)
+                self.compoundPosts = Array(repeating: [], count: self.dates.count)
+                for document in (querySnapshot?.documents)! {
+                    let data = document.data()
+                    let dateFormatter = DateFormatter()
+                    dateFormatter.dateFormat = "MMMM d, yyyy"
+                    let dateString = data["date"] as? String
+//                    print (dateString)
+                    let date = dateFormatter.date(from: dateString!)!
+//                    print(date)
+                    if (self.dates.contains(date)) {
+                        let index = self.dates.lastIndex(of: date)!
+                        self.compoundPosts[index].append(document.documentID)
+                    }
+                    
+                }
+                print(self.compoundPosts)
+                for i in 0..<self.compoundPosts.count {
+                    self.compoundPosts[i] =     self.compoundPosts[i].shuffled()
+                }
+                print(self.compoundPosts)
+                print(self.posts)
+                print(self.compoundPosts)
+                let currentCount = self.posts.count + 10
+                var count: Int = 0
+                if (self.compoundPosts.count >= 1) {
+                    while self.compoundPosts[count].count == 0 && count < self.compoundPosts.count{
+                        count += 1
+                        
+                    }
                     if count == self.compoundPosts.count {
                         return
-                    } else if self.compoundPosts[count].count == 0 {
-                        count += 1
+                    }
+                    if self.compoundPosts[count].count > 10 {
+                        while self.posts.count < currentCount {
+                            self.posts.append(self.compoundPosts[count].popLast()!)
+                        }
+                        self.tableView.reloadData()
+                        return
                     } else {
-                        self.posts.append(self.compoundPosts[count].popLast()!)
+                        while self.posts.count < currentCount {
+                            if count == self.compoundPosts.count {
+                                return
+                            } else if self.compoundPosts[count].count == 0 {
+                                count += 1
+                            } else {
+                                self.posts.append(self.compoundPosts[count].popLast()!)
+                            }
+                        }
+                        self.tableView.reloadData()
+                        return
                     }
                 }
                 self.tableView.reloadData()
-                return
             }
-//            while self.posts.count < currentCount && itemExists {
-//                 for i in 0 ..< self.compoundPosts.count {
-//                    if i == self.compoundPosts.count && self.compoundPosts[i].count == 0 {
-//                        itemExists = false
-//                        break
-//                    } else {
-//                        while self.compoundPosts[i].count != 0 &&
-//                            self.posts.count < currentCount {
-//                            let pop = self.compoundPosts[i].popLast()
-//                            if pop != nil {
-//                                self.posts.append(pop!)
-//                            } else {
-//                                break
-//                            }
-//                        }
-//                        compoundPostsCount += 1
-//                    }
-//                }
-//            }
         }
+                      
+
+//        var itemExists: Bool = true
+        
         
 //        print(self.posts)
 //        print(self.compoundPosts)
@@ -185,6 +225,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
             cell.indexPath = indexPath
             cell.updateHeight = self
             cell.layoutIfNeeded()
+            if newPost {
+                newPost = false
+                cell.likeCount!.text = "0"
+                cell.commentCount!.text = "0"
+            }
             return cell
         }
     }

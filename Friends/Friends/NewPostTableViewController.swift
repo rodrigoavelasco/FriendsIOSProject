@@ -175,7 +175,7 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
                 }
                 self.homeVC!.posts.insert(postID, at: 0)
                 self.homeVC!.tableView.reloadData()
-                
+                self.homeVC!.resetPostZero()
             }
         }
         
