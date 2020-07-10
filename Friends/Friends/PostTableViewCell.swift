@@ -31,12 +31,12 @@ class PostTableViewCell: UITableViewCell {
                         let likes = map["likes"] as! [String]
                         if !likes.contains(Auth.auth().currentUser!.uid) {
                             if globalDark {
-                                self.likeButton!.imageView!.image = UIImage(named:"heart-unselected-dark")
+                                self.likeButton!.setImage(UIImage(named:"heart-unselected-dark"), for: .normal)
                             } else {
-                                self.likeButton!.imageView!.image = UIImage(named:"heart-unselected")
+                                self.likeButton!.setImage(UIImage(named:"heart-unselected"), for: .normal)
                             }
                         } else {
-                            self.likeButton!.imageView!.image = UIImage(named:"heart-selected")
+                            self.likeButton!.setImage(UIImage(named:"heart-selected-dark"), for: .normal)
                         }
                     } else {
                         self.db.collection("posts").document(self.postID).updateData(["likes": []])
@@ -46,9 +46,9 @@ class PostTableViewCell: UITableViewCell {
             }
         } else {
             if globalDark {
-                self.likeButton!.imageView!.image = UIImage(named:"heart-unselected-dark")
+                self.likeButton!.setImage(UIImage(named:"heart-unselected-dark"), for: .normal)
             } else {
-                self.likeButton!.imageView!.image = UIImage(named:"heart-unselected")
+                self.likeButton!.setImage(UIImage(named:"heart-unselected"), for: .normal)
             }
         }
         

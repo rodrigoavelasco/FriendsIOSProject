@@ -64,17 +64,30 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                     if map["birthday"] != nil {
                         cell.birthday!.text = map["birthday"] as? String
                     } else {
-                        cell.birthday!.text = "Tap to set"
+                        if (self.uid! == Auth.auth().currentUser!.uid) {
+                            cell.birthday!.text = "Tap to set"
+                        } else {
+                            cell.birthday!.text = ""
+                        }
+                        
                     }
                     if map["phone"] != nil {
                         cell.phone!.text = map["phone"] as? String
                     } else {
-                        cell.phone!.text = "Tap to set"
+                        if (self.uid! == Auth.auth().currentUser!.uid) {
+                            cell.phone!.text = "Tap to set"
+                        } else {
+                            cell.phone!.text = ""
+                        }
                     }
                     if map["location"] != nil {
                         cell.location!.text = map["location"] as? String
                     } else {
-                        cell.location!.text = "Tap to set"
+                        if (self.uid! == Auth.auth().currentUser!.uid) {
+                            cell.location!.text = "Tap to set"
+                        } else {
+                            cell.location!.text = ""
+                        }
                     }
                     if map["image"] != nil {
                         cell.userImage!.load(url: URL(string: (map["image"] as? String)!)!)

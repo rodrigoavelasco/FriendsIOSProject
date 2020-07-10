@@ -20,18 +20,34 @@ class NewCommentTableViewCell: UITableViewCell {
     var postID: String!
     let db = Firestore.firestore()
     var commentTVC: CommentsTableViewController!
+    @IBOutlet var submitCommentButton: UIButton!
     @IBAction func typeCommentButton(_ sender: Any) {
         newCommentText!.text = ""
         if globalDark {
             newCommentText!.textColor = UIColor.white
+            self.backgroundColor = UIColor(white: 0.05, alpha: 1.0)
         } else {
             newCommentText!.textColor = UIColor.black
+            
+            self.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         }
         newCommentText.becomeFirstResponder()
     }
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        if globalDark {
+            newCommentText!.textColor = UIColor.white
+            contentView.backgroundColor = UIColor(white: 0.05, alpha: 1.0)
+            backgroundColor = UIColor(white: 0.05, alpha: 1.0)
+            submitCommentButton!.setImage(UIImage(named: "submitcomment-negative")!, for: .normal)
+        } else {
+            newCommentText!.textColor = UIColor.black
+            contentView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+            backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+            submitCommentButton!.setImage(UIImage(named: "submitcomment")!, for: .normal)
+        }
+
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {

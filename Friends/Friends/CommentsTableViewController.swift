@@ -117,6 +117,18 @@ class CommentsTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "New Comment", for: indexPath as IndexPath) as! NewCommentTableViewCell
             cell.postID = postID!
             cell.commentTVC = self
+            if globalDark {
+                cell.newCommentText!.textColor = UIColor.white
+                cell.contentView.backgroundColor = UIColor(white: 0.05, alpha: 1.0)
+                cell.backgroundColor = UIColor(white: 0.05, alpha: 1.0)
+                cell.submitCommentButton!.setImage(UIImage(named: "submitcomment-negative")!, for: .normal)
+            } else {
+                cell.newCommentText!.textColor = UIColor.black
+                cell.contentView.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+                cell.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
+                cell.submitCommentButton!.setImage(UIImage(named: "submitcomment")!, for: .normal)
+
+            }
             return cell
         } else {
             let cell = UITableViewCell()
