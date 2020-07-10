@@ -19,18 +19,19 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
     let db = Firestore.firestore()
     var results: [[String]] = []
     var index:Int = 0
+    var delegate:UIViewController!
     
     var newSearch: Bool = true
     
-    private let noResultsLabel: UILabel = {
-        let label = UILabel()
-        label.isHidden = true
-        label.text = "No Results"
-        label.textAlignment = .center
-        label.textColor = .black
-        label.font = .systemFont(ofSize: 21, weight: .medium)
-        return label
-    }()
+//    private let noResultsLabel: UILabel = {
+//        let label = UILabel()
+//        label.isHidden = true
+//        label.text = "No Results"
+//        label.textAlignment = .center
+//        label.textColor = .black
+//        label.font = .systemFont(ofSize: 21, weight: .medium)
+//        return label
+//    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,7 +42,7 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
-        noResultsLabel.frame = CGRect(x: view.frame.width / 4, y: (view.frame.height-200)/2, width: view.frame.width/2, height: 200)
+//        noResultsLabel.frame = CGRect(x: view.frame.width / 4, y: (view.frame.height-200)/2, width: view.frame.width/2, height: 200)
     }
     
     func tableViewInitialized() {
@@ -100,7 +101,7 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         index = indexPath.row
-        print("ole ole ole ole")
+//        print("ole ole ole ole")
         performSegue(withIdentifier: "ProfileSegue", sender: nil)
     }
     
@@ -161,7 +162,6 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
     
     func updateUI() {
         self.tableView.isHidden = results.isEmpty
-        self.noResultsLabel.isHidden = !results.isEmpty
         if !results.isEmpty {
             self.tableView.reloadData()
         }
@@ -170,10 +170,9 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         print("perform segue")
         if segue.identifier == "ProfileSegue", let destination = segue.destination as? ProfilePageViewController
-//            let index = tableView.indexPathForSelectedRow?.row
         {
             destination.uid = results[index][3]
-            print(destination.uid)
+            destination.delegate = delegate
         }
     }
 }

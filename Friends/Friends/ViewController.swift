@@ -75,6 +75,16 @@ class ViewController: UIViewController, UITextFieldDelegate {
             NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
             abort()
         }
+        fetchedResults![0].setValue(false, forKey: "biometriclogin")
+        // Commit changes
+        do {
+            try context.save()
+        } catch {
+            // error occurs
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
         return fetchedResults![0].value(forKey: "biometriclogin") as! Bool
     }
     
