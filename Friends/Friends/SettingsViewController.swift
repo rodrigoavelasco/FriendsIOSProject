@@ -213,11 +213,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 print("blocked friends section")
             }
         case 1:
-            if cell == 0{
-                print("change username")
-            } else if cell == 1{
-                print("change password")
-            }
+            print("change password")
+            self.performSegue(withIdentifier: "changePasswordSegueIdentifier", sender: nil)
+            
         case 2:
             if cell == 0{
                 print("notification sounds")

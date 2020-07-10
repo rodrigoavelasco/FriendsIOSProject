@@ -38,6 +38,7 @@
 		87A2835724A81E12005D5725 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 87A2835524A81E12005D5725 /* LaunchScreen.storyboard */; };
 		87A2835F24A8374E005D5725 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 87A2835E24A8374E005D5725 /* GoogleService-Info.plist */; };
 		87FCF53124B58137007AE2F3 /* PrivacyProtectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FCF53024B58137007AE2F3 /* PrivacyProtectionViewController.swift */; };
+		87FCF55324B7F294007AE2F3 /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87FCF55224B7F294007AE2F3 /* ChangePasswordViewController.swift */; };
 		9416EC5FD33B9CD285A57241 /* Pods_Friends.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1CEFAB696A766BBDEBE89FA2 /* Pods_Friends.framework */; };
 /* End PBXBuildFile section */
 
@@ -77,6 +78,7 @@
 		87A2835824A81E12005D5725 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		87A2835E24A8374E005D5725 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		87FCF53024B58137007AE2F3 /* PrivacyProtectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyProtectionViewController.swift; sourceTree = "<group>"; };
+		87FCF55224B7F294007AE2F3 /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		CADF12B6681A71C4E394245B /* Pods-Friends.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Friends.debug.xcconfig"; path = "Target Support Files/Pods-Friends/Pods-Friends.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -144,6 +146,7 @@
 				87A2834924A81E0F005D5725 /* SceneDelegate.swift */,
 				87A2834B24A81E0F005D5725 /* ViewController.swift */,
 				87A2834D24A81E0F005D5725 /* Main.storyboard */,
+				87FCF55224B7F294007AE2F3 /* ChangePasswordViewController.swift */,
 				49382F6C24B7D5B800EA597E /* CommentButton.swift */,
 				4942262724B5188C0097C133 /* NewPostTableViewCell.swift */,
 				87FCF53024B58137007AE2F3 /* PrivacyProtectionViewController.swift */,
@@ -303,6 +306,7 @@
 				87FCF53124B58137007AE2F3 /* PrivacyProtectionViewController.swift in Sources */,
 				4943AEC024B1407C00B566F6 /* UserProfileTableViewCell.swift in Sources */,
 				49369F4B24AEAA2000396ABD /* ProfilePageViewController.swift in Sources */,
+				87FCF55324B7F294007AE2F3 /* ChangePasswordViewController.swift in Sources */,
 				49DE369C24B2609A00630AFE /* NewCommentTableViewCell.swift in Sources */,
 				49DE369A24B25F9D00630AFE /* CommentsViewController.swift in Sources */,
 				35C239D824B2B6D700391468 /* UserTableViewCell.swift in Sources */,
