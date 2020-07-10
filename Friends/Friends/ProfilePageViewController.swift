@@ -290,7 +290,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                 if let document = document, document.exists {
                     
                     let dataDescription = document.data().map(String.init(describing:)) ?? "nil"
-                    print("Document data: \(dataDescription)")
+//                    print("Document data: \(dataDescription)")
                     let map = document.data()!
                     let username = map["name"] as! String
                     self.navigationItem.title! = username

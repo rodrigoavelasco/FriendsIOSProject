@@ -1384,6 +1384,29 @@
             </objects>
             <point key="canvasLocation" x="2579.7101449275365" y="787.5"/>
         </scene>
+        <!--View Controller-->
+        <scene sceneID="VFN-kc-QL5">
+            <objects>
+                <viewController id="OSi-9y-cDb" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="UyZ-Xf-xdU">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="mKc-dP-ATn">
+                                <rect key="frame" x="159" y="186" width="97" height="34"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <viewLayoutGuide key="safeArea" id="v3V-o3-uQG"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vn9-iG-dcc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3406" y="1256"/>
+        </scene>
         <!--Add Friends View Controller-->
         <scene sceneID="Vc5-Vq-Mnm">
             <objects>

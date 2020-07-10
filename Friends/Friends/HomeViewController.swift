@@ -389,7 +389,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
             }
         }
-        if segue.identifier! == "Show Comments" {
+        if segue.identifier != nil && segue.identifier! == "Show Comments" {
             let commentsVC = segue.destination as! CommentsTableViewController
             commentsVC.postID = postIDSender
         }
