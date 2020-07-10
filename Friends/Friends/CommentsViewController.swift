@@ -62,6 +62,7 @@ class CommentsViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.dataSource = self
     }
     
+    var postSet: Bool = false
 
     /*
     // MARK: - Navigation

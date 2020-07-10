@@ -23,6 +23,7 @@ class NewPostTableViewCell: UITableViewCell, UIImagePickerControllerDelegate, UI
 
 
     var vc: NewPostTableViewController!
+    var hvc: HomeViewController!
     
     @IBOutlet weak var postContent: UITextView!
     @IBOutlet weak var pictureButton: UIButton!

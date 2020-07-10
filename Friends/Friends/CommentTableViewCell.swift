@@ -20,9 +20,12 @@ class CommentTableViewCell: UITableViewCell {
     @IBOutlet weak var userName: UILabel!
     @IBOutlet weak var commentDate: UILabel!
     @IBOutlet weak var commentText: UILabel!
+    var reset:Bool = true
     let db = Firestore.firestore()
     
     var commentID: String!
+    
+    var commentsVC: CommentsTableViewController!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -62,6 +65,10 @@ class CommentTableViewCell: UITableViewCell {
                 self.commentDate!.text = map["date"] as! String
                 self.commentText!.text = map["comment"] as! String
                 self.commentText!.sizeToFit()
+                if self.reset {
+                    self.commentsVC.tableView.reloadData()
+                    self.reset = false
+                }
             }
         }
     }

@@ -213,7 +213,7 @@
                                                     </state>
                                                     <connections>
                                                         <action selector="newPostPressed:" destination="aui-rf-vlu" eventType="touchUpInside" id="I9H-pS-n1h"/>
-                                                        <segue destination="NUL-8T-fYG" kind="show" id="JBH-ka-L5N"/>
+                                                        <segue destination="NUL-8T-fYG" kind="show" identifier="New Post Segue" id="JBH-ka-L5N"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -1530,7 +1530,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="faR-cN-uY3"/>
+        <segue reference="axF-yL-D6V"/>
         <segue reference="gy5-Yb-7cK"/>
     </inferredMetricsTieBreakers>
     <resources>

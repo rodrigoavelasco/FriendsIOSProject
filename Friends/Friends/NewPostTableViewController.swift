@@ -26,6 +26,8 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
     
     var postCell: NewPostTableViewCell!
     
+    var homeVC: HomeViewController!
+    
     let db = Firestore.firestore()
     let storage = Storage.storage()
     
@@ -171,6 +173,8 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
                             print("Document successfully updated")
                         }
                 }
+                self.homeVC!.posts.insert(postID, at: 0)
+                self.homeVC!.tableView.reloadData()
                 
             }
         }
@@ -301,6 +305,7 @@ class NewPostTableViewController: UITableViewController, UIImagePickerController
 
         // Configure the cell...
         cell.vc = self
+        cell.hvc = homeVC!
 //        print (cell.postContent!.text!)
 //        print("tell")
         if globalDark {

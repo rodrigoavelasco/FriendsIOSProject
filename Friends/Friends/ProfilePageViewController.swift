@@ -392,6 +392,7 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
         if segue.identifier! == "Show Comments" {
             let commentsVC = segue.destination as! CommentsTableViewController
             commentsVC.postID = postIDSender!
+            commentsVC.profileVC = self
         }
     }
     var postIDSender: String!

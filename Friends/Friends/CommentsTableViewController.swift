@@ -29,7 +29,7 @@ class CommentsTableViewController: UITableViewController {
         let docsRef = db.collection("posts").document(postID)
         docsRef.getDocument { (document, error) in
             if (error != nil) {
-                print(error)
+                print(error!)
                 return
             }
             let map = document!.data()!
@@ -110,6 +110,7 @@ class CommentsTableViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: "Comment", for: indexPath as IndexPath) as! CommentTableViewCell
             cell.commentID = comments[indexPath.row - 2]
             cell.addComment(commentID: comments[indexPath.row - 2])
+            cell.commentsVC = self
             return cell
         }
         else if indexPath.row == tableView.numberOfRows(inSection: 0) - 1 {
@@ -148,6 +149,15 @@ class CommentsTableViewController: UITableViewController {
    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
        self.view.endEditing(true)
    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        if homeVC != nil {
+            homeVC.tableView.reloadData()
+        }
+        if profileVC != nil {
+            profileVC.tableView.reloadData()
+        }
+    }
        
 
     /*
@@ -209,4 +219,8 @@ class CommentsTableViewController: UITableViewController {
     
     var postID: String!
     var comments: [String] = []
+    var postSet: Bool = false
+    
+    var homeVC: HomeViewController!
+    var profileVC: ProfilePageViewController!
 }

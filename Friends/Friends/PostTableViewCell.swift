@@ -313,7 +313,14 @@ class PostTableViewCell: UITableViewCell {
                 }
                 
                 self.postText!.sizeToFit()
-                let addedHeight = self.postText!.frame.size.height
+//                let addedHeight = self.postText!.frame.size.height
+                if self.commentsVC != nil {
+                    if !self.commentsVC.postSet {
+                        self.commentsVC.tableView.reloadData()
+                        self.commentsVC.postSet = true
+                    }
+                    
+                }
 //                self.updateHeight!.updateStringHeight(indexPath: self.indexPath, height: addedHeight)
                 
             } else {

@@ -29,12 +29,10 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         
         if (!posts.isEmpty) {
-            if posts.count % 10 == 0 {
                 if indexPaths.first!.row >= posts.count {
                     print("****** loading next batch) ******* \(posts.count)")
                     loadNextBatch()
                 }
-            }
         }
     }
     
@@ -389,9 +387,14 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                 
             }
         }
-        if segue.identifier! == "Show Comments" {
+        if segue.identifier != nil && segue.identifier! == "Show Comments" {
             let commentsVC = segue.destination as! CommentsTableViewController
             commentsVC.postID = postIDSender
+            commentsVC.homeVC = self
+        }
+        if segue.identifier != nil && segue.identifier! == "New Post Segue" {
+            let newPostVC = segue.destination as! NewPostTableViewController
+            newPostVC.homeVC = self
         }
     }
     var postIDSender: String!
