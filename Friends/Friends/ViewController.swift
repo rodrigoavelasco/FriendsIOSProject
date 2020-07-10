@@ -136,6 +136,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         } else if passwordTextField.text != "" || passwordTextField.text != "password" {
             let credentialsAlert = UIAlertController(title: "Password field empty", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
             credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(credentialsAlert, animated: true, completion: nil)
         }
 
     }
@@ -181,15 +182,19 @@ class ViewController: UIViewController, UITextFieldDelegate {
         }else if emailTextField.text! == "" || emailTextField.text == "email" {
             let credentialsAlert = UIAlertController(title: "Email field empty", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
             credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            credentialsAlert.present(self, animated: true, completion: nil)
         }else if passwordTextField.text! == "" || passwordTextField.text == "password" {
             let credentialsAlert = UIAlertController(title: "Password field empty", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
             credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            credentialsAlert.present(self, animated: true, completion: nil)
         }else if confirmPasswordTextField.text! == "" || confirmPasswordTextField.text == "confirm password" {
             let credentialsAlert = UIAlertController(title: "Confirm Password field empty", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
             credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            credentialsAlert.present(self, animated: true, completion: nil)
         } else if confirmPasswordTextField.text! != passwordTextField.text!{
             let credentialsAlert = UIAlertController(title: "Passwords do not match", message: "Please make sure your passwords match", preferredStyle: UIAlertController.Style.alert)
             credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            credentialsAlert.present(self, animated: true, completion: nil)
         }
     }
     
