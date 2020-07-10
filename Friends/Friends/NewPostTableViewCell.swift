@@ -85,7 +85,7 @@ class NewPostTableViewCell: UITableViewCell, UIImagePickerControllerDelegate, UI
             case .authorized:
                 break
             default:
-                print("Access denied")
+//                print("Access denied")
                 return
             }
             picker.allowsEditing = false

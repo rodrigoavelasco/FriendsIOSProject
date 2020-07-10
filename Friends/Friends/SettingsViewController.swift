@@ -22,9 +22,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return 4
+            return 3
         } else if section == 1 {
-            return 2
+            return 1
         } else if section == 2 {
             return 1
         } else if section == 3 {
@@ -40,17 +40,13 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            if indexPath.row == 0 || indexPath.row == 2 || indexPath.row == 3 {
+            if indexPath.row == 1 || indexPath.row == 2 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "SwitchSettings", for: indexPath as IndexPath)
-                if indexPath.row == 0 {
-                    cell.textLabel!.text = "Location Services"
-                    locationServicesSwitch.addTarget(self, action: #selector(toggleLocationServices(_:)), for: .valueChanged)
-                    cell.accessoryView = locationServicesSwitch
-                } else if indexPath.row == 2 {
+                if indexPath.row == 1 {
                     cell.textLabel!.text = "Enable Screen Security"
                     enableScreenSecuritySwitch.addTarget(self, action: #selector(toggleScreenSecurity(_:)), for: .valueChanged)
                     cell.accessoryView = enableScreenSecuritySwitch
-                } else if indexPath.row == 3{
+                } else if indexPath.row == 2{
                     cell.textLabel!.text = "Enable Automatic Biometric Log In"
                     enableBiometricLoginSwitch.addTarget(self, action: #selector(toggleAutomaticBiometricLogin(_:)), for: .valueChanged)
                     cell.accessoryView = enableBiometricLoginSwitch
@@ -58,9 +54,9 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                     cell.textLabel!.text = "This shouldn't appear!"
                 }
                 return cell
-            } else if indexPath.row == 1 {
+            } else if indexPath.row == 0 {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ArrowSettings", for: indexPath as IndexPath)
-                if indexPath.row == 1 {
+                if indexPath.row == 0 {
                     cell.textLabel!.text = "Blocked Friends"
                 } else {
                     cell.textLabel!.text = "This shouldn't appear"
@@ -75,9 +71,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         } else if indexPath.section == 1 {
             let cell = tableView.dequeueReusableCell(withIdentifier: "ArrowSettings", for: indexPath as IndexPath)
             if indexPath.row == 0 {
-                cell.textLabel!.text = "Change Username"
-                return cell
-            } else if indexPath.row == 1 {
                 cell.textLabel!.text = "Change Password"
             } else {
                 cell.textLabel!.text = "This shouldn't appear!"
@@ -127,12 +120,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
             return cell
         }
 //        return UITableViewCell()
-    }
-    
-    @IBAction func toggleLocationServices(_ sender: UISwitch){
-        if sender.isOn{
-            print("location Services On")
-        }
     }
     
     @IBAction func toggleScreenSecurity(_ sender: UISwitch){
