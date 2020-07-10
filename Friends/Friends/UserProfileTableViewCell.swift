@@ -465,10 +465,24 @@ class UserProfileTableViewCell: UITableViewCell, UITextFieldDelegate, CLLocation
 
             currentVC?.present(locationAlert, animated: true, completion: nil)
         } else {
-            let targetURL = URL(string: "http://maps.apple.com/?q=\"\(locationText!)")!
-            let isAvailable = UIApplication.shared.canOpenURL(targetURL)
-            if (isAvailable) {
-                UIApplication.shared.open(targetURL)
+            let docRef = db.collection("users").document(uid!)
+            docRef.getDocument() { (result, err) in
+                if let result = result, result.exists {
+                    let map = result.data()!
+                    var string: String = ""
+                    if map["location"] != nil {
+                        string = map["location"] as! String
+                    } else {
+                        string = ""
+                    }
+                    let finalString = "http://maps.apple.com/?q=\(string)".addingPercentEncoding(withAllowedCharacters: CharacterSet.urlQueryAllowed)!
+                    let targetURL = URL(string: finalString)
+                    let isAvailable = UIApplication.shared.canOpenURL(targetURL!)
+                    if (isAvailable) {
+                        UIApplication.shared.open(targetURL!)
+                    }
+
+                }
             }
         }
     }
