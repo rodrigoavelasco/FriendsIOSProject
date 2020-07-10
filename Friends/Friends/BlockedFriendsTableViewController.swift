@@ -32,6 +32,7 @@ class BlockedFriendsTableViewController: UITableViewController {
                 let map = document.data()!
                 if map["blocked"] != nil {
                     self.blockedFriends = map["blocked"] as! [String]
+                    self.tableView.reloadData()
                 }
                 
             }
@@ -47,6 +48,7 @@ class BlockedFriendsTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+        print(blockedFriends.count)
         return blockedFriends.count
     }
 
@@ -55,8 +57,10 @@ class BlockedFriendsTableViewController: UITableViewController {
         let docRef = db.collection("users").document(blockedFriends[indexPath.row])
         docRef.getDocument() { (document, error) in
             if let document = document, document.exists {
-                let map = document.data()
-                
+                let map = document.data()!
+                cell.avatar.load(url: URL(string: map["image"] as! String)!)
+                cell.name!.text = map["name"] as! String
+                cell.username!.text = map["username"] as! String
             }
         }
 

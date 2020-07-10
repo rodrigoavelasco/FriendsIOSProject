@@ -181,8 +181,11 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
                     let map = document.data()!
                     cell.homeNameLabel!.text = map["name"] as? String
                     cell.homeUserNameLabel!.text = map["username"] as? String
+                    print("loading home image ________")
                     if map["image"] != nil {
-                        cell.homeUserImageView!.load(url: URL(string: map["image"] as! String)!)
+                        print(map["image"])
+                        cell.homeUserImageView.load(url: URL(string: map["image"] as! String)!)
+                        print(cell.homeUserImageView.image.debugDescription)
                     } else {
                         cell.homeUserImageView!.image = UIImage(named: "blank-profile-picture")
                     }

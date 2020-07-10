@@ -415,11 +415,14 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
 
 }
 extension UIImageView {
-    func load(url: URL) {
+    func load(url: URL) {print("INSIDE LOAD URL")
         DispatchQueue.global().async { [weak self] in
             if let data = try? Data(contentsOf: url) {
+                print("INSIDE LOAD URL-LETDATA")
                 if let image = UIImage(data: data) {
+                    print("INSIDE LOAD URL-LETIMAGE")
                     DispatchQueue.main.async {
+                        print("INSIDE LOAD URL-DQ")
                         self?.image = image
                     }
                 }

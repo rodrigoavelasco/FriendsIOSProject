@@ -209,7 +209,7 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = indexPath.row
         switch section {
         case 0:
-            if cell == 1{
+            if cell == 0{
                 print("blocked friends section")
                 self.performSegue(withIdentifier: "blockedFriendsSegue", sender: nil)
             }
