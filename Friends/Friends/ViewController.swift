@@ -122,6 +122,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
             Auth.auth().signIn(withEmail: emailTextField.text!, password: passwordTextField.text!) {
               user, error in
               if error != nil && user == nil {
+                let credentialsAlert = UIAlertController(title: "Error loggin in \(String(describing: error))", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
+                credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                self.present(credentialsAlert, animated: true, completion: nil)
                 print("error loggin in \(String(describing: error))")
               } else{
                     self.performSegue(withIdentifier: "homeScreenSegueIdentifier", sender: nil)
@@ -168,13 +171,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
                             "name": self.fullNameTextField.text!
                         ], merge: true) { err in
                             if let err = err {
-                                print("Error adding doucment: \(err)")
+                                print("Error adding document: \(err)")
                             } else {
                                 print("Document added")
                             }
                         }
                     }else {
                         print(error ?? "no error")
+                        let credentialsAlert = UIAlertController(title: "Error creating account \(String(describing: error))", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
+                        credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+                        self.present(credentialsAlert, animated: true, completion: nil)
+                        
                     }
             }
             
