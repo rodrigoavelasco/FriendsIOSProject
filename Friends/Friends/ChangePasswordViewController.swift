@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import FirebaseAuth
+import CoreData
 
-class ChangePasswordViewController: ViewController {
+class ChangePasswordViewController: UIViewController {
 
     @IBOutlet weak var changePasswordLabel: UILabel!
     @IBOutlet weak var oldPasswordTextField: UITextField!
@@ -18,16 +20,43 @@ class ChangePasswordViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        customizeButton(button: confirmChangeButton)
+        if isDarkMode() {
+            overrideUserInterfaceStyle = .dark
+        } else{
+            overrideUserInterfaceStyle = .light
+        }
+        customizeButtonBlue(button: confirmChangeButton)
+    }
+    @IBAction func confirmButtonPressed(_ sender: Any) {
     }
     
-    override func customizeButton(button:UIButton){
+    func customizeButtonBlue(button:UIButton){
         button.setTitleColor(.white, for: .normal)
         button.backgroundColor = UIColor.blue
         button.layer.cornerRadius = 10
         button.layer.borderWidth = 1.0
         button.layer.borderColor = UIColor.darkGray.cgColor
         
+    }
+    
+    func isDarkMode() -> Bool {
+        let userID = (Auth.auth().currentUser?.uid) ?? ""
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "Settings")
+        var fetchedResults: [NSManagedObject]? = nil
+        let predicate = NSPredicate(format: "uid MATCHES '\(userID)'")
+        request.predicate = predicate
+        
+        do{
+            try fetchedResults = context.fetch(request) as? [NSManagedObject]
+        } catch{
+            // error occurs
+            let nserror = error as NSError
+            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+            abort()
+        }
+        return fetchedResults![0].value(forKey: "darkmode") as! Bool
     }
 
     
