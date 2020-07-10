@@ -68,6 +68,8 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Please allow us to access your camera</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Please allow access to upload photos.</string>
 </dict>
