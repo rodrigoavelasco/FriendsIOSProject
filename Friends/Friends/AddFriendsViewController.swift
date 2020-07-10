@@ -19,7 +19,7 @@ class AddFriendsViewController: UIViewController, UITableViewDelegate, UITableVi
     let db = Firestore.firestore()
     var results: [[String]] = []
     var index:Int = 0
-    var delegate:UIViewController!
+    var delegate:FriendsListViewController!
     
     var newSearch: Bool = true
     

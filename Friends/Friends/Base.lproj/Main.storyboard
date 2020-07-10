@@ -1392,7 +1392,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="p9G-YZ-gcF">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="BlockedFriendsTableCell" id="p9G-YZ-gcF">
                                 <rect key="frame" x="0.0" y="28" width="414" height="43.666667938232422"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="p9G-YZ-gcF" id="Dwt-D4-aBp">
@@ -1493,9 +1493,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="60"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
-                                        <connections>
-                                            <segue destination="1Hd-bP-7NW" kind="show" identifier="ProfileSegue" id="LYw-Wt-wIe"/>
-                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
@@ -1506,6 +1503,7 @@
                     <navigationItem key="navigationItem" id="nJe-sR-GDZ"/>
                     <connections>
                         <outlet property="tableView" destination="m49-uy-NVI" id="F7W-gK-jjt"/>
+                        <segue destination="1Hd-bP-7NW" kind="show" identifier="ProfileSegue" id="Mk2-C6-dTE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w9w-de-9hf" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

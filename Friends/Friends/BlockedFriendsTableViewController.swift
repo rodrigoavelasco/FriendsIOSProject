@@ -19,6 +19,7 @@ class BlockedFriendsTableViewController: UITableViewController {
     let db = Firestore.firestore()
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView?.register(UINib(nibName: "UserTableViewCell", bundle: nil), forCellReuseIdentifier: "BlockedFriendsTableCell")
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -53,7 +54,7 @@ class BlockedFriendsTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath) as! UserTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "BlockedFriendsTableCell", for: indexPath) as! UserTableViewCell
         let docRef = db.collection("users").document(blockedFriends[indexPath.row])
         docRef.getDocument() { (document, error) in
             if let document = document, document.exists {

@@ -18,6 +18,8 @@ protocol FriendReloader {
 
 class FriendsListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, FriendReloader {
     func reloadTable() {
+        self.list = []
+        fetchUIDs()
         self.tableView.reloadData()
     }
     
@@ -34,6 +36,7 @@ class FriendsListViewController: UIViewController, UITableViewDelegate, UITableV
     override func viewDidLoad() {
         super.viewDidLoad()
         tableViewInitialized()
+        fetchUIDs()
     }
     
 //    override func viewWillAppear(_ animated: Bool) {
@@ -44,7 +47,7 @@ class FriendsListViewController: UIViewController, UITableViewDelegate, UITableV
     func tableViewInitialized() {
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.isHidden = true
+//        tableView.isHidden = true
         tableView?.register(UINib(nibName: "UserTableViewCell", bundle: nil), forCellReuseIdentifier: "FriendsTableCell")
     }
     
@@ -89,7 +92,7 @@ class FriendsListViewController: UIViewController, UITableViewDelegate, UITableV
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             index = indexPath.row
-            performSegue(withIdentifier: "ProfileSegue", sender: nil)
+            performSegue(withIdentifier: "ProfileSegue1", sender: nil)
     }
     
     func fetchUIDs() {
@@ -100,12 +103,16 @@ class FriendsListViewController: UIViewController, UITableViewDelegate, UITableV
             if data["friends"] != nil {
                 self.friendsUID = data["friends"] as! [String]
                 print(self.friendsUID)
+                self.fetchFriends()
+//                self.updateUI()
             }
         }}
     }
     
     func fetchFriends() {
         if friendsUID.count != 0 {
+            var tempList: [[String]] = []
+            var count: Int = 0
             for id in friendsUID {
                 let userDocumentRef = db.collection("users").document(id)
                     userDocumentRef.getDocument { (document, error) in
@@ -122,11 +129,17 @@ class FriendsListViewController: UIViewController, UITableViewDelegate, UITableV
                          arr.append(name!)
                          arr.append(image ?? "")
                          arr.append(uid)
-                         self.list.append(arr)
+                         tempList.append(arr)
+                            count += 1
                          print("count: \(self.list.count)")
+                        if count == self.friendsUID.count {
+                            print("&&&& count &&&&")
+                            self.list = tempList
+                             self.updateUI()
+                         }
                      }}
                 }
-            self.updateUI()
+//            self.updateUI()
         }
     }
     
@@ -143,6 +156,7 @@ class FriendsListViewController: UIViewController, UITableViewDelegate, UITableV
             print("perform segue1")
             if segue.identifier == "ProfileSegue1", let destination = segue.destination as? ProfilePageViewController {
                 destination.uid = list[index][3]
+                destination.delegate = self
             } else if segue.identifier == "AddFriendSegue", let destination = segue.destination as? AddFriendsViewController {
                 destination.delegate = self
             }
