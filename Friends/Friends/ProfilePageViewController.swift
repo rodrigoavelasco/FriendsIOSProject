@@ -302,15 +302,15 @@ class ProfilePageViewController: UIViewController, UITableViewDelegate, UITableV
                     myDocumentRef.getDocument{ (document, error) in
                         if let document = document, document.exists {
                             let map = document.data()!
-                            print("myUID: \(Auth.auth().currentUser!.uid)")
-                            print("friends: \(map["friends"] as! [String])")
+//                            print("myUID: \(Auth.auth().currentUser!.uid)")
+//                            print("friends: \(map["friends"] as! [String])")
                             if map["friends"] != nil {
                                 self.myFriends = (map["friends"] as? [String])!
                             }
                             if map["blocked"] != nil {
                                 self.myBlocked = (map["blocked"] as? [String])!
                             }
-                            print(self.myFriends)
+//                            print(self.myFriends)
                             if self.myFriends.contains(self.uid!) {
                                 print("friend exeists")
                                 self.navigationItem.setRightBarButtonItems([self.deleteButton, self.blockButton], animated: true)

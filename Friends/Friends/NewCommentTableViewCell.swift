@@ -53,7 +53,8 @@ class NewCommentTableViewCell: UITableViewCell {
             ref = db.collection("comments").addDocument(data: [
                 "uid": uid,
                 "date": dateString,
-                "comment": comment
+                "comment": comment,
+                "post": self.postID!
             ]) { err in
                 if let err = err {
                     print("Error adding document: \(err)")
@@ -64,7 +65,8 @@ class NewCommentTableViewCell: UITableViewCell {
                         } else {
                             self.newCommentText!.textColor = UIColor(white: 0.5, alpha: 1.0)
                             self.newCommentText!.text = "Type comment here"
-                                self.commentTVC!.tableView.reloadData()
+                            self.commentTVC!.addComments()
+                                
                             
                         }
                     }

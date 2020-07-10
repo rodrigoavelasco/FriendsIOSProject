@@ -62,8 +62,8 @@ class CommentsTableViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func addComments() {
         let docsRef = db.collection("posts").document(postID)
         docsRef.getDocument { (document, error) in
             if (error != nil) {
@@ -73,9 +73,13 @@ class CommentsTableViewController: UITableViewController {
             let map = document!.data()!
             if map["comments"] != nil {
                 self.comments = map["comments"] as! [String]
+                self.tableView.reloadData()
             }
             
         }
+    }
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
 
         return 3 + comments.count
     }
@@ -135,6 +139,16 @@ class CommentsTableViewController: UITableViewController {
         return UITableView.automaticDimension
     }
 
+    
+    func textFieldShouldReturn(textField:UITextField) -> Bool {
+           textField.resignFirstResponder()
+           return true
+   }
+   
+   override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+       self.view.endEditing(true)
+   }
+       
 
     /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -192,14 +206,6 @@ class CommentsTableViewController: UITableViewController {
     */
     
     // code to enable tapping on the background to remove software keyboard
-    private func textFieldShouldReturn(textField:UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
-    }
-    
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.view.endEditing(true)
-    }
     
     var postID: String!
     var comments: [String] = []
