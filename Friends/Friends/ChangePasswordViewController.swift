@@ -10,10 +10,9 @@ import UIKit
 import FirebaseAuth
 import CoreData
 
-class ChangePasswordViewController: UIViewController {
+class ChangePasswordViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet weak var changePasswordLabel: UILabel!
-    @IBOutlet weak var oldPasswordTextField: UITextField!
     @IBOutlet weak var newPasswordTextField: UITextField!
     @IBOutlet weak var confirmNewPasswordTextField: UITextField!
     @IBOutlet weak var confirmChangeButton: UIButton!
@@ -25,9 +24,41 @@ class ChangePasswordViewController: UIViewController {
         } else{
             overrideUserInterfaceStyle = .light
         }
+        initializeTextFields()
         customizeButtonBlue(button: confirmChangeButton)
     }
+    
+    func initializeTextFields(){
+        newPasswordTextField.delegate = self
+        confirmNewPasswordTextField.delegate = self
+        newPasswordTextField.text = "Enter New Password"
+        newPasswordTextField.textColor = UIColor.lightGray
+        confirmNewPasswordTextField.text = "Confirm New Password"
+        confirmNewPasswordTextField.textColor = UIColor.lightGray
+    }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField.textColor == UIColor.lightGray{
+            textField.text = nil
+            textField.textColor = .label
+        }
+    }
+    
     @IBAction func confirmButtonPressed(_ sender: Any) {
+        if validPassword(){
+            Auth.auth().currentUser?.updatePassword(to: newPasswordTextField.text!, completion: nil)
+            let credentialsAlert = UIAlertController(title: "Updated Password", message: "Successfully", preferredStyle: UIAlertController.Style.alert)
+            credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(credentialsAlert, animated: true, completion: nil)
+        }else{
+            let credentialsAlert = UIAlertController(title: "Invalid Passwords", message: "Please check your passwords match or that they are not empty.", preferredStyle: UIAlertController.Style.alert)
+            credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(credentialsAlert, animated: true, completion: nil)
+        }
+    }
+    
+    func validPassword() -> Bool {
+        return newPasswordTextField.text != "" && confirmNewPasswordTextField.text != "" && newPasswordTextField.text != "Enter New Password" && confirmNewPasswordTextField.text != "Confirm New Password" && newPasswordTextField.text == confirmNewPasswordTextField.text
     }
     
     func customizeButtonBlue(button:UIButton){

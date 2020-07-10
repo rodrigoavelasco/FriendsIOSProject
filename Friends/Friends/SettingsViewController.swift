@@ -248,9 +248,8 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
                 user?.delete(completion: nil)
                 self.performSegue(withIdentifier: "loginScreenSegueIdentifier", sender: nil)
             }))
-            self.present(secondAlert, animated: true, completion: nil)
             secondAlert.addAction(UIAlertAction(title: "No", style: .destructive, handler: nil))
-
+            self.present(secondAlert, animated: true, completion: nil)
         }))
         deleteAlert.addAction(UIAlertAction(title: "No", style: .destructive, handler: nil))
         
