@@ -129,6 +129,13 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     print("signed In successfully ")
                 }
             }
+        } else if emailTextField.text == "" || emailTextField.text == "email"{
+            let credentialsAlert = UIAlertController(title: "Email field empty", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
+            credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(credentialsAlert, animated: true, completion: nil)
+        } else if passwordTextField.text != "" || passwordTextField.text != "password" {
+            let credentialsAlert = UIAlertController(title: "Password field empty", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
+            credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         }
 
     }
@@ -172,13 +179,17 @@ class ViewController: UIViewController, UITextFieldDelegate {
             
             
         }else if emailTextField.text! == "" || emailTextField.text == "email" {
-            // do alert
+            let credentialsAlert = UIAlertController(title: "Email field empty", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
+            credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         }else if passwordTextField.text! == "" || passwordTextField.text == "password" {
-            //do alert
+            let credentialsAlert = UIAlertController(title: "Password field empty", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
+            credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         }else if confirmPasswordTextField.text! == "" || confirmPasswordTextField.text == "confirm password" {
-            //do alert
+            let credentialsAlert = UIAlertController(title: "Confirm Password field empty", message: "Please enter your credentials", preferredStyle: UIAlertController.Style.alert)
+            credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         } else if confirmPasswordTextField.text! != passwordTextField.text!{
-            // do alert
+            let credentialsAlert = UIAlertController(title: "Passwords do not match", message: "Please make sure your passwords match", preferredStyle: UIAlertController.Style.alert)
+            credentialsAlert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
         }
     }
     
@@ -232,6 +243,9 @@ class ViewController: UIViewController, UITextFieldDelegate {
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
         if textField.textColor == UIColor.lightGray{
+            if (textField.text == "password" || textField.text == "confirm password"){
+                textField.isSecureTextEntry = true
+            }
             textField.text = nil
             textField.textColor = .label
         }
@@ -242,6 +256,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         passwordTextField.delegate = self
         passwordTextField.text = "password"
         passwordTextField.textColor = UIColor.lightGray
+        passwordTextField.isSecureTextEntry = false
         emailTextField.text = "email"
         emailTextField.textColor = UIColor.lightGray
     }
@@ -252,6 +267,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         usernameTextField.delegate = self
         confirmPasswordTextField.text = "confirm password"
         confirmPasswordTextField.textColor = UIColor.lightGray
+        confirmPasswordTextField.isSecureTextEntry = false
         fullNameTextField.text = "full name"
         fullNameTextField.textColor = UIColor.lightGray
         usernameTextField.text = "username"
