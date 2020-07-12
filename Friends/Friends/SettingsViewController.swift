@@ -298,16 +298,6 @@ class SettingsViewController: UIViewController, UITableViewDelegate, UITableView
         darkMode = fetchedResults![0].value(forKey: "darkmode") as! Bool
         screenSecurity = fetchedResults![0].value(forKey: "screensecurity") as! Bool
         
-        fetchedResults![0].setValue(false, forKey: "biometriclogin")
-        // Commit changes
-        do {
-            try context.save()
-        } catch {
-            // error occurs
-            let nserror = error as NSError
-            NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-            abort()
-        }
         
         let biometricLogin = fetchedResults![0].value(forKey: "biometriclogin") as! Bool
         darkModeSwitch.isOn = darkMode
